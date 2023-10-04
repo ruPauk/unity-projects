@@ -612,6 +612,7 @@ GameObject:
   - component: {fileID: 338036394}
   - component: {fileID: 338036396}
   - component: {fileID: 338036397}
+  - component: {fileID: 338036398}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -634,7 +635,7 @@ MonoBehaviour:
   VisitorsCount: 0
   DishCount: 0
   Timer: 0
-  levelJson: {fileID: 4900000, guid: fea2433e0dcd2fe4f9c62c5912e47642, type: 3}
+  levelJson: {fileID: 4900000, guid: b7765dbd32f2b7148ae880c49a85cc15, type: 3}
 --- !u!4 &338036395
 Transform:
   m_ObjectHideFlags: 0
@@ -664,6 +665,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _visitorPrefab: {fileID: -4338965951687503061, guid: 86041f4ecc5618a438832fd95d05487c, type: 3}
   _tableSeats: {fileID: 584247643}
+  _incomingPath:
+  - {fileID: 438649341}
+  - {fileID: 284398394}
+  _outgoingPath:
+  - {fileID: 1601877208}
+  - {fileID: 161139265}
 --- !u!114 &338036397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,6 +684,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orders: []
+--- !u!114 &338036398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 338036393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea1079f6043c3049b3b290635aea499, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _greenDishColor: {r: 0.14509805, g: 0.6039216, b: 0.15686275, a: 1}
+  _redDishColor: {r: 0.7058824, g: 0.13725491, b: 0.13725491, a: 1}
+  _blueDishColor: {r: 0.1882353, g: 0.09803922, b: 0.6313726, a: 1}
+  _yellowDishColor: {r: 0.8784314, g: 0.8352941, b: 0.047058824, a: 1}
+  _dishPrefab: {fileID: 4497674099584621706, guid: 86ec60a896be90f43a958dbcce5966ae, type: 3}
 --- !u!1 &435057243
 GameObject:
   m_ObjectHideFlags: 0

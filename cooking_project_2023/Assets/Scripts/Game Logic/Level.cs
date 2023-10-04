@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-    private Orders _orders;
+    private OrdersModule _orders;
 
     public int VisitorsCount;
     public int DishCount;
@@ -15,7 +15,7 @@ public class Level : MonoBehaviour
 
     void Start()
     {
-        _orders = FindObjectOfType<Orders>();
+        _orders = FindObjectOfType<OrdersModule>();
         _orders.SetUpLevel(JsonConvert.DeserializeObject<JsonObjectNewtonsoft>(levelJson.text));
     }
 
