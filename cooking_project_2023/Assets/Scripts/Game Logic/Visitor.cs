@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class Visitor : MonoBehaviour
 {
     [SerializeField] private GameObject _orderTable;
-    private VerticalLayoutGroup _gridLayout;
 
     public int Id;
     public Order Order;
@@ -14,7 +13,6 @@ public class Visitor : MonoBehaviour
 
     private void Start()
     {
-        _gridLayout = GetComponent<VerticalLayoutGroup>();
         HideOrder();
     }
 

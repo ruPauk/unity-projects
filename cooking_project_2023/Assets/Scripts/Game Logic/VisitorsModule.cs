@@ -47,7 +47,7 @@ public class VisitorsModule : MonoBehaviour
     public void UtilizeVisitor(Visitor visitor)
     {
         _tableSeats.SetSeatFree(visitor.Seat);
-
+        visitor.HideOrder();
         var sequence = MoveVisitorAlongPath(visitor, _outgoingPath, null);
         StartCoroutine(sequence);
 
@@ -102,7 +102,6 @@ public class VisitorsModule : MonoBehaviour
     public void AddVisitor()
     {
         GetNewVisitor();
-
     }
 
     public void DeleteVisitor()

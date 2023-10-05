@@ -12,7 +12,6 @@ public class DishModule : MonoBehaviour
     [SerializeField] private SpriteRenderer _dishPrefab;
     private ObjectPool<SpriteRenderer> _dishPrefabPool;
 
-
     private void Start()
     {
         _dishPrefabPool = new ObjectPool<SpriteRenderer>(_dishPrefab);

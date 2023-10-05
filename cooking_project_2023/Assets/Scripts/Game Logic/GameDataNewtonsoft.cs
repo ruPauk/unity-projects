@@ -39,17 +39,17 @@ public class JsonObjectNewtonsoft : IDisposable
     public int DishCount;
     public int Timer;
 
-    public IReadOnlyCollection<Dish> OrderDish
+    /*public IReadOnlyCollection<Dish> OrderDish
     {
         get
         {
             var order = Orders[0];
             var result = order.Dishes;
-            Orders.Remove(order);
+            //Orders.Remove(order);
 
             return result;
         }
-    }
+    }*/
 
     public void Dispose()
     {
