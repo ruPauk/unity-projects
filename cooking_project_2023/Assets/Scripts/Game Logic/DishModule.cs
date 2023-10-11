@@ -9,38 +9,38 @@ public class DishModule : MonoBehaviour
     [SerializeField] private Color _blueDishColor;
     [SerializeField] private Color _yellowDishColor;
 
-    [SerializeField] private SpriteRenderer _dishPrefab;
-    private ObjectPool<SpriteRenderer> _dishPrefabPool;
+    [SerializeField] private OrderDish _dishPrefab;
+    private ObjectPool<OrderDish> _dishPrefabPool;
 
     private void Start()
     {
-        _dishPrefabPool = new ObjectPool<SpriteRenderer>(_dishPrefab);
+        _dishPrefabPool = new ObjectPool<OrderDish>(_dishPrefab);
     }
 
-    private Color ChooseColorByDish(Dish dish)
+    private Color ChooseColorByDish(DishEnum dish)
     {
         switch (dish)
         {
-            case Dish.None:
+            case DishEnum.None:
                 return Color.black;
-            case Dish.Food1:
+            case DishEnum.Green:
                 return _greenDishColor;
-            case Dish.Food2:
+            case DishEnum.Red:
                 return _redDishColor;
-            case Dish.Food3:
+            case DishEnum.Blue:
                 return _blueDishColor;
-            case Dish.Food4:
+            case DishEnum.Yellow:
                 return _yellowDishColor;
             default:
                 return Color.black;
         }
     }
 
-    public GameObject GetColoredDish(Dish dish)
+    public GameObject GetColoredDish(DishEnum dish)
     {
         var color = ChooseColorByDish(dish);
         var result = _dishPrefabPool.Spawn();
-        result.color = color;
+        result.spriteRenderer.color = color;
 
         return result.gameObject;
     }

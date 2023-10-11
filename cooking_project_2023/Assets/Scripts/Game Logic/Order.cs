@@ -6,5 +6,10 @@ using UnityEngine;
 [Serializable]
 public class Order
 {
-    public List<Dish> Dishes;
+    public List<DishEnum> Dishes;
+
+    public void RemoveDish(DishEnum dish)
+    {
+        Dishes.Remove(dish);
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,8 @@ public class Visitor : MonoBehaviour
     public Order Order;
     public Transform Seat;
 
+    private List<OrderDish> _dishList;
+
     private void Start()
     {
         HideOrder();
@@ -20,6 +23,8 @@ public class Visitor : MonoBehaviour
     {
         Id = 0;
         Order = null;
+        Seat = null;
+        _dishList = null;
     }
 
     public void ShowOrder()
@@ -37,11 +42,16 @@ public class Visitor : MonoBehaviour
         var padding = new Vector3(0, -0.8f, 0);
         foreach (var dish in dishes)
         {
-            //_gridLayout.
             dish.transform.parent = _orderTable.transform;
             dish.transform.localScale *= 0.6f;
             dish.transform.position = _orderTable.transform.position + padding;
             padding.y += 0.8f;
         }
     }
+/*
+    public void RemoveDish(DishEnum dish)
+    {
+        var removingObject = _dishList.Find((x) => x.gameObject.transform)
+        _dishList.Remove();
+    }*/
 }

@@ -27,9 +27,9 @@ public class VisitorsModule : MonoBehaviour
         _orders = FindObjectOfType<OrdersModule>();
         _dishModule = FindObjectOfType<DishModule>();
         DOTween.Init();
-
     }
 
+    //Вытаскиваем из пула посетителя, даем ему заказ и отправляем за стол
     public Visitor GetNewVisitor()
     {
         var place = _tableSeats.GetFreeSeat();
@@ -44,30 +44,31 @@ public class VisitorsModule : MonoBehaviour
         return null;
     }
 
+    //Отправляем посетителя домой с выполненным заказом
     public void UtilizeVisitor(Visitor visitor)
     {
         _tableSeats.SetSeatFree(visitor.Seat);
         visitor.HideOrder();
-        var sequence = MoveVisitorAlongPath(visitor, _outgoingPath, null);
+        _visitorsList.Remove(visitor);
+        var sequence = MoveVisitorAlongPath(visitor, _outgoingPath, null, () => {
+            visitor.ResetVisitor();
+            _visitorsPool.Despawn(visitor);
+        });
         StartCoroutine(sequence);
-
-        //visitor.ResetVisitor();
-        //_visitorsList.Remove(visitor);
-        //_visitorsPool.Despawn(visitor);
     }
 
-    public void SendVisitorToHisPlace(Visitor visitor, Transform place)
+    private void SendVisitorToHisPlace(Visitor visitor, Transform place)
     {
         visitor.transform.position = _incomingPath[0].position;
-        var sequence = MoveVisitorAlongPath(visitor, _incomingPath, place);
+        var sequence = MoveVisitorAlongPath(visitor, _incomingPath, place, () => { 
+            visitor.ShowOrder();
+            visitor.ShowOrderContent(GetDishesArray(visitor));
+        });
         StartCoroutine(sequence);
         visitor.Seat = place;
-        //visitor.transform.position = place.position;
-        visitor.ShowOrderContent(GetDishesArray(visitor));
-        
     }
 
-    private IEnumerator MoveVisitorAlongPath(Visitor visitor, Transform[] path, Transform destination)
+    private IEnumerator MoveVisitorAlongPath(Visitor visitor, Transform[] path, Transform destination, Action action)
     {
         float speed = 2.5f;
         var sequence = DOTween.Sequence();
@@ -84,8 +85,7 @@ public class VisitorsModule : MonoBehaviour
             sequence.Append(visitor.transform.DOMove(new Vector3(destination.position.x, destination.position.y, destination.position.z), speed));
         }
         yield return sequence.WaitForCompletion();
-        visitor.ShowOrder();
-
+        action.Invoke();
     }
 
     private GameObject[] GetDishesArray(Visitor visitor)
@@ -111,5 +111,15 @@ public class VisitorsModule : MonoBehaviour
             var lastVisitor = _visitorsList[0];
             UtilizeVisitor(lastVisitor);
         }        
+    }
+
+    public void FindDish()
+    {
+        Visitor tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(DishEnum.Yellow));
+        if ( tmp != null )
+        {
+            Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
+        }
+        tmp.Order.RemoveDish(DishEnum.Yellow);
     }
 }
