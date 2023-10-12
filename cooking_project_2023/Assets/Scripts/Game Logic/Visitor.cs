@@ -37,21 +37,29 @@ public class Visitor : MonoBehaviour
         _orderTable.SetActive(false);
     }
 
-    public void ShowOrderContent(GameObject[] dishes)
+    public void ShowOrderContent(OrderDish[] dishes)
     {
+        _dishList = dishes.ToList();
         var padding = new Vector3(0, -0.8f, 0);
-        foreach (var dish in dishes)
+        foreach (var dish in _dishList)
         {
+            Debug.Log($"Dish - {dish.dishType}");
             dish.transform.parent = _orderTable.transform;
-            dish.transform.localScale *= 0.6f;
+            //dish.transform.localScale *= 0.6f;
             dish.transform.position = _orderTable.transform.position + padding;
             padding.y += 0.8f;
         }
     }
-/*
+
     public void RemoveDish(DishEnum dish)
     {
-        var removingObject = _dishList.Find((x) => x.gameObject.transform)
-        _dishList.Remove();
-    }*/
+        var removingObject = _dishList.Find((x) => x.dishType == dish);
+        if (removingObject != null )
+        {
+            Debug.Log($"Found removing dish - {removingObject.dishType}");
+            _dishList.Remove(removingObject);
+            removingObject.Remove();
+            Order.RemoveDish(dish);
+        }
+    }
 }

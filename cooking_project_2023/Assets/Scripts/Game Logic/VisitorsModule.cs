@@ -15,6 +15,7 @@ public class VisitorsModule : MonoBehaviour
     private List<Visitor> _visitorsList;
     private OrdersModule _orders;
     private DishModule _dishModule;
+    private TableModule _tableModule;
 
     // Для DoTween нужен путь из Vector'ов, а у меня Transform'ы
     [SerializeField] private Transform[] _incomingPath;
@@ -26,7 +27,9 @@ public class VisitorsModule : MonoBehaviour
         _visitorsList = new List<Visitor>();
         _orders = FindObjectOfType<OrdersModule>();
         _dishModule = FindObjectOfType<DishModule>();
-        DOTween.Init();
+        _tableModule = FindObjectOfType<TableModule>();
+        _tableModule.OnDishTakeAway += TakeAwayDishHandler;
+        DOTween.Init(); 
     }
 
     //Вытаскиваем из пула посетителя, даем ему заказ и отправляем за стол
@@ -88,14 +91,31 @@ public class VisitorsModule : MonoBehaviour
         action.Invoke();
     }
 
-    private GameObject[] GetDishesArray(Visitor visitor)
+    private OrderDish[] GetDishesArray(Visitor visitor)
     {
-        List<GameObject> tmp = new List<GameObject>();
+        List<OrderDish> tmp = new List<OrderDish>();
         foreach (var dish in visitor.Order.Dishes)
         {
             tmp.Add(_dishModule.GetColoredDish(dish));
         }
         return tmp.ToArray();
+    }
+
+    private void TakeAwayDishHandler(DishEnum dish)
+    {
+        if (_visitorsList.Count > 0)
+        {
+            Visitor tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(dish));
+            if (tmp != null)
+            {
+                Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
+                tmp.RemoveDish(dish);
+                if (tmp.Order.Dishes.Count <= 0)
+                {
+                    UtilizeVisitor(tmp);
+                }
+            }
+        }  
     }
 
     // Methods for buttons
@@ -119,7 +139,7 @@ public class VisitorsModule : MonoBehaviour
         if ( tmp != null )
         {
             Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
+            tmp.RemoveDish(DishEnum.Yellow);
         }
-        tmp.Order.RemoveDish(DishEnum.Yellow);
     }
 }

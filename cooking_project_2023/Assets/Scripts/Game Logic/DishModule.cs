@@ -36,15 +36,21 @@ public class DishModule : MonoBehaviour
         }
     }
 
-    public GameObject GetColoredDish(DishEnum dish)
+    public OrderDish GetColoredDish(DishEnum dish)
     {
         var color = ChooseColorByDish(dish);
         var result = _dishPrefabPool.Spawn();
-        result.spriteRenderer.color = color;
+        result.SetUpOrderDish(this, dish, color);
+        //result.spriteRenderer.color = color;
+        //result.dishType = dish;
 
-        return result.gameObject;
+        return result;
     }
 
+    public void RemoveFromPool(OrderDish orderDish)
+    {
+        _dishPrefabPool.Despawn(orderDish);
+    }
     
 
 
