@@ -35,11 +35,14 @@ public class VisitorsModule : MonoBehaviour
     //Вытаскиваем из пула посетителя, даем ему заказ и отправляем за стол
     public Visitor GetNewVisitor()
     {
+        var order = _orders.GetOrder();
+        if (order == null)
+            return null;
         var place = _tableSeats.GetFreeSeat();
         if (place is not null)
         {
             var newVisitor = _visitorsPool.Spawn();
-            newVisitor.Order = _orders.GetOrder();
+            newVisitor.Order = order;
             _visitorsList.Add(newVisitor);
             SendVisitorToHisPlace(newVisitor, place);
             return newVisitor;
