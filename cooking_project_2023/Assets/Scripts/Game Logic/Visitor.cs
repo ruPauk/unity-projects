@@ -43,7 +43,7 @@ public class Visitor : MonoBehaviour
         var padding = new Vector3(0, -0.8f, 0);
         foreach (var dish in _dishList)
         {
-            Debug.Log($"Dish - {dish.dishType}");
+            Debug.Log($"Dish - {dish.DishType}");
             dish.transform.parent = _orderTable.transform;
             //dish.transform.localScale *= 0.6f;
             dish.transform.position = _orderTable.transform.position + padding;
@@ -53,10 +53,10 @@ public class Visitor : MonoBehaviour
 
     public void RemoveDish(DishEnum dish)
     {
-        var removingObject = _dishList.Find((x) => x.dishType == dish);
+        var removingObject = _dishList.Find((x) => x.DishType == dish);
         if (removingObject != null )
         {
-            Debug.Log($"Found removing dish - {removingObject.dishType}");
+            Debug.Log($"Found removing dish - {removingObject.DishType}");
             _dishList.Remove(removingObject);
             removingObject.Remove();
             Order.RemoveDish(dish);

@@ -11,15 +11,13 @@ public class VisitorsModule : MonoBehaviour
     [SerializeField] private Visitor _visitorPrefab;
     [SerializeField] private TableSeats _tableSeats;
 
+    [SerializeField] private Transform[] _incomingPath;
+    [SerializeField] private Transform[] _outgoingPath;
+
     private ObjectPool<Visitor> _visitorsPool;
     private List<Visitor> _visitorsList;
     private OrdersModule _orders;
     private DishModule _dishModule;
-    private TableModule _tableModule;
-
-    // ƒл€ DoTween нужен путь из Vector'ов, а у мен€ Transform'ы
-    [SerializeField] private Transform[] _incomingPath;
-    [SerializeField] private Transform[] _outgoingPath;
 
     private void Start()
     {
@@ -27,8 +25,8 @@ public class VisitorsModule : MonoBehaviour
         _visitorsList = new List<Visitor>();
         _orders = FindObjectOfType<OrdersModule>();
         _dishModule = FindObjectOfType<DishModule>();
-        _tableModule = FindObjectOfType<TableModule>();
-        _tableModule.OnDishTakeAway += TakeAwayDishHandler;
+       // _tableModule = FindObjectOfType<TableModule>();
+        ModuleLocator.GetModule<TableModule>().OnDishTakeAway += TakeAwayDishHandler;
         DOTween.Init(); 
     }
 

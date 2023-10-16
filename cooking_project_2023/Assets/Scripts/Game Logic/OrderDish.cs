@@ -1,30 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class OrderDish : MonoBehaviour
 {
     private DishModule _dishModule;
 
-    public DishEnum dishType;
-    public SpriteRenderer spriteRenderer;
+    public DishEnum DishType;
+    public Image Image;
 
-    private void Awake()
+    private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        //Image = new Image();
     }
 
     public void SetUpOrderDish(DishModule dishModule, DishEnum dishEnum, Color color)
     {
         _dishModule = dishModule;
-        dishType = dishEnum;
-        spriteRenderer.color = color;
+        DishType = dishEnum;
+        Image.color = color;
     }
 
     public void Remove()
     {
-        dishType = DishEnum.None;
+        DishType = DishEnum.None;
+        Image.color = Color.black;
         _dishModule.RemoveFromPool(this);
     }
 }
