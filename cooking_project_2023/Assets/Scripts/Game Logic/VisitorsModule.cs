@@ -16,8 +16,6 @@ public class VisitorsModuleR : IModule
     {
         _visitorsPool = visitorsPool;
         _visitorsList = new ();
-
-        ModuleLocator.GetModule<TableModule>().OnDishTakeAway += TakeAwayDishHandler;
     }
 
     public void SetUp(TableSeats tableSeats)
@@ -28,13 +26,11 @@ public class VisitorsModuleR : IModule
     public void GetNewVisitor()
     {
         var order = ModuleLocator.GetModule<OrdersModule>().GetOrder();
-        //if (order == null)
-            //return null;
         var place = _tableSeats.GetFreeSeat();
         if (place is not null)
         {
             var visitor = new VisitorR(_visitorsPool, new VisitorModel());
-
+            
             //newVisitor.Order = order;
             _visitorsList.Add(visitor);
             visitor.SendVisitorToHisPlace(place, _tableSeats.GetIncomingPath);
@@ -43,15 +39,18 @@ public class VisitorsModuleR : IModule
         //return null;
     }
 
-    public void UtilizeVisitor(VisitorView visitor)
+    
+    public void UtilizeVisitor(VisitorR visitor)
     {
+        //Поменял здесь входной параметр с VisitorView на VisitorR -> надо все менять теперь везде?
+        //Мы же будем с Visitor общаться только через presenter вовне? Тогда надо дописывать еще управление в presenter?
         _tableSeats.SetSeatFree(visitor.Seat);
         visitor.HideOrder();
         _visitorsList.Remove(visitor);
         visitor.StartMovingByPath(_tableSeats.GetOutgoingPath, null,
             () => _visitorsPool.Despawn(visitor));
     }
-
+    /*
     public void TakeAwayDishHandler(DishEnum dish)
     {
         if (_visitorsList.Count > 0)
@@ -68,8 +67,8 @@ public class VisitorsModuleR : IModule
             }
         }
     }
+    */
 
-    
 }
 
 
@@ -132,6 +131,7 @@ public class VisitorsModule : MonoBehaviour
         StartCoroutine(sequence);
     }
 
+    /*
     private void SendVisitorToHisPlace(VisitorView visitor, Transform place)
     {
         visitor.transform.position = _incomingPath[0].position;
@@ -142,6 +142,7 @@ public class VisitorsModule : MonoBehaviour
         StartCoroutine(sequence);
         visitor.Seat = place;
     }
+    */
 
     private IEnumerator MoveVisitorAlongPath(VisitorView visitor, Transform[] path, Transform destination, Action action)
     {

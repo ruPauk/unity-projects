@@ -7,61 +7,74 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-public class VisitorR : IDisposable
-{
-    private readonly VisitorView View;
-    private readonly VisitorModel Model;
-    private readonly IObjectPool<VisitorView> VisitorsPool;
-
-    public VisitorR(IObjectPool<VisitorView> visitorPool, VisitorModel model)
-    {
-        View = visitorPool.Spawn();
-        VisitorsPool = visitorPool;
-        Model = model;
-    }
-
-    public void Dispose()
-    {
-        VisitorsPool.Despawn(View);
-        Model.Dispose();
-    }
-
-    public void SendVisitorToHisPlace(Transform place, Transform[] incPath)
-    {
-        View.transform.position = incPath[0].position;
-        View.StartMovingByPath(incPath, place, () =>
-        {
-            View.ShowOrder();
-            //View.ShowOrderContent(GetDishesArray(visitor));
-        });
-
-        View.Seat = place;
-    }
-}
-
 public class VisitorModel : IDisposable
 {
     private List<OrderDish> _dishList;
+    private float _time;
+    //OnComplete дергать же надо, когда модель изменяется? А пока она никак не изменятется.
+    //Будто нужно переносить RemoveDish из View в Presenter и оттуда менять модель?
     public event Action OnComplete;
 
     public VisitorModel()
     {
-
+        ModuleLocator.GetModule<TableModule>().OnDishTakeAwayR += TakeAwayDish;
     }
+
     ~VisitorModel()
     {
-
+        ModuleLocator.GetModule<TableModule>().OnDishTakeAwayR -= TakeAwayDish;
     }
 
-    public void SetUpOrder(Order order, Transform place)
+    public List<OrderDish> DishList
     {
+        get => _dishList;
+    }
 
+    private void ClearDishList()
+    {
+        foreach (var dish in _dishList)
+        {
+            dish.Remove();
+        }
+    }
+
+    private void TakeAwayDish(Data data)
+    {
+        if (!data.Flag)
+        {
+            OrderDish temp = _dishList.Find((x) => x.DishType == data.Dish);
+            if (temp != null)
+            {
+                //Debug.Log($"Seat - {temp.Seat}, Order - {String.Join(", ", temp.Order.Dishes.ToArray())}");
+                _dishList.Remove(temp);
+                if (_dishList.Count <= 0)
+                {
+                    OnComplete?.Invoke();
+                }
+            }
+        }
+    }
+
+    //Зачем в модели Transform здесь? Нам же он во View нужен?
+    public void SetUpOrder(Order order)//, Transform place)
+    {
+        var dishModule = ModuleLocator.GetModule<DishModule>();
+
+        if (_dishList == null)
+            _dishList = new();
+        else
+            ClearDishList();
+
+        foreach (var dish in order.Dishes)
+        {
+            _dishList.Add(dishModule.GetColoredDish(dish));
+        }
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        ClearDishList();
+        OnComplete = null;
     }
 }
 
@@ -123,11 +136,12 @@ public class VisitorView : MonoBehaviour
         action.Invoke();
     }
 
-    public void ShowOrderContent(OrderDish[] dishes)
+    //public void ShowOrderContent(OrderDish[] dishes)
+    public void ShowOrderContent(List<OrderDish> dishes)
     {
-        _dishList = dishes.ToList();
+        //_dishList = dishes.ToList();
         var padding = new Vector3(0, -0.8f, 0);
-        foreach (var dish in _dishList)
+        foreach (var dish in dishes)
         {
             Debug.Log($"Dish - {dish.DishType}");
             dish.transform.parent = _orderTable.transform;
@@ -149,3 +163,4 @@ public class VisitorView : MonoBehaviour
         }
     }
 }
+
