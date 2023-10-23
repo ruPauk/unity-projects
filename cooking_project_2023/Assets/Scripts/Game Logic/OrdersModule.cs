@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Модуль Orders - Настройка уровня из JSON и отдача заказа + проверка на окончание уровня
-public class OrdersModule : MonoBehaviour
+public class OrdersModule : MonoBehaviour, IModule
 {
     [SerializeField] private List<Order> _orders;
     private int _currentOrderNumber;

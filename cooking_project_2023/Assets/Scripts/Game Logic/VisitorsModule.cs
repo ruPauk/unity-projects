@@ -3,26 +3,97 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+
+public class VisitorsModuleR : IModule
+{
+    private IObjectPool<VisitorView> _visitorsPool;
+    private List<VisitorR> _visitorsList;
+    private TableSeats _tableSeats;
+
+    public VisitorsModuleR(IObjectPool<VisitorView> visitorsPool)
+    {
+        _visitorsPool = visitorsPool;
+        _visitorsList = new ();
+
+        ModuleLocator.GetModule<TableModule>().OnDishTakeAway += TakeAwayDishHandler;
+    }
+
+    public void SetUp(TableSeats tableSeats)
+    {
+        _tableSeats = tableSeats;
+    }
+
+    public void GetNewVisitor()
+    {
+        var order = ModuleLocator.GetModule<OrdersModule>().GetOrder();
+        //if (order == null)
+            //return null;
+        var place = _tableSeats.GetFreeSeat();
+        if (place is not null)
+        {
+            var visitor = new VisitorR(_visitorsPool, new VisitorModel());
+
+            //newVisitor.Order = order;
+            _visitorsList.Add(visitor);
+            visitor.SendVisitorToHisPlace(place, _tableSeats.GetIncomingPath);
+            //return visitor;
+        }
+        //return null;
+    }
+
+    public void UtilizeVisitor(VisitorView visitor)
+    {
+        _tableSeats.SetSeatFree(visitor.Seat);
+        visitor.HideOrder();
+        _visitorsList.Remove(visitor);
+        visitor.StartMovingByPath(_tableSeats.GetOutgoingPath, null,
+            () => _visitorsPool.Despawn(visitor));
+    }
+
+    public void TakeAwayDishHandler(DishEnum dish)
+    {
+        if (_visitorsList.Count > 0)
+        {
+            VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(dish));
+            if (tmp != null)
+            {
+                Debug.Log($"Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
+                tmp.RemoveDish(dish);
+                if (tmp.Order.Dishes.Count <= 0)
+                {
+                    UtilizeVisitor(tmp);
+                }
+            }
+        }
+    }
+
+    
+}
+
+
+
+
 
 // Модуль Visitors - Создает посетителей(pool) + создает pool + берет заказ + куда идет?
 public class VisitorsModule : MonoBehaviour
 {
-    [SerializeField] private Visitor _visitorPrefab;
+    [SerializeField] private VisitorView _visitorPrefab;
     [SerializeField] private TableSeats _tableSeats;
 
     [SerializeField] private Transform[] _incomingPath;
     [SerializeField] private Transform[] _outgoingPath;
 
-    private ObjectPool<Visitor> _visitorsPool;
-    private List<Visitor> _visitorsList;
+    private ObjectPool<VisitorView> _visitorsPool;
+    private List<VisitorView> _visitorsList;
     private OrdersModule _orders;
     private DishModule _dishModule;
 
     private void Start()
     {
-        _visitorsPool = new ObjectPool<Visitor>(_visitorPrefab);
-        _visitorsList = new List<Visitor>();
+        _visitorsPool = new ObjectPool<VisitorView>(_visitorPrefab);
+        _visitorsList = new List<VisitorView>();
         _orders = FindObjectOfType<OrdersModule>();
         _dishModule = FindObjectOfType<DishModule>();
        // _tableModule = FindObjectOfType<TableModule>();
@@ -31,7 +102,7 @@ public class VisitorsModule : MonoBehaviour
     }
 
     //Вытаскиваем из пула посетителя, даем ему заказ и отправляем за стол
-    public Visitor GetNewVisitor()
+    public VisitorView GetNewVisitor()
     {
         var order = _orders.GetOrder();
         if (order == null)
@@ -49,7 +120,7 @@ public class VisitorsModule : MonoBehaviour
     }
 
     //Отправляем посетителя домой с выполненным заказом
-    public void UtilizeVisitor(Visitor visitor)
+    public void UtilizeVisitor(VisitorView visitor)
     {
         _tableSeats.SetSeatFree(visitor.Seat);
         visitor.HideOrder();
@@ -61,7 +132,7 @@ public class VisitorsModule : MonoBehaviour
         StartCoroutine(sequence);
     }
 
-    private void SendVisitorToHisPlace(Visitor visitor, Transform place)
+    private void SendVisitorToHisPlace(VisitorView visitor, Transform place)
     {
         visitor.transform.position = _incomingPath[0].position;
         var sequence = MoveVisitorAlongPath(visitor, _incomingPath, place, () => { 
@@ -72,7 +143,7 @@ public class VisitorsModule : MonoBehaviour
         visitor.Seat = place;
     }
 
-    private IEnumerator MoveVisitorAlongPath(Visitor visitor, Transform[] path, Transform destination, Action action)
+    private IEnumerator MoveVisitorAlongPath(VisitorView visitor, Transform[] path, Transform destination, Action action)
     {
         float speed = 2.5f;
         var sequence = DOTween.Sequence();
@@ -92,7 +163,7 @@ public class VisitorsModule : MonoBehaviour
         action.Invoke();
     }
 
-    private OrderDish[] GetDishesArray(Visitor visitor)
+    private OrderDish[] GetDishesArray(VisitorView visitor)
     {
         List<OrderDish> tmp = new List<OrderDish>();
         foreach (var dish in visitor.Order.Dishes)
@@ -106,7 +177,7 @@ public class VisitorsModule : MonoBehaviour
     {
         if (_visitorsList.Count > 0)
         {
-            Visitor tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(dish));
+            VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(dish));
             if (tmp != null)
             {
                 Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
@@ -136,7 +207,7 @@ public class VisitorsModule : MonoBehaviour
 
     public void FindDish()
     {
-        Visitor tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(DishEnum.Yellow));
+        VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(DishEnum.Yellow));
         if ( tmp != null )
         {
             Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");

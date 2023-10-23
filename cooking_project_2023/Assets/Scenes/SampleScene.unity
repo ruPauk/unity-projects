@@ -1121,10 +1121,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _seats:
-  - {fileID: 614789837}
-  - {fileID: 294214022}
-  - {fileID: 1062043898}
-  - {fileID: 805363009}
+  - {fileID: 1465936844}
+  - {fileID: 262769029}
+  - {fileID: 873303300}
+  - {fileID: 1471554765}
+  IncomingPath:
+  - {fileID: 438649341}
+  - {fileID: 284398394}
+  OutgoingPath:
+  - {fileID: 1601877208}
+  - {fileID: 161139265}
 --- !u!1 &614789836
 GameObject:
   m_ObjectHideFlags: 0

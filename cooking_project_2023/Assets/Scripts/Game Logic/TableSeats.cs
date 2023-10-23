@@ -5,11 +5,25 @@ using UnityEngine;
 public class TableSeats : MonoBehaviour
 {
     [SerializeField] private List<Transform> _seats;
+
+    [SerializeField] private Transform[] _incomingPath;
+    [SerializeField] private Transform[] _outgoingPath;
+
     private Status[] _seatsStatus;
+    public Transform[] GetIncomingPath
+    {
+        get => _incomingPath;
+    }
+
+    public Transform[] GetOutgoingPath
+    {
+        get =>_outgoingPath;
+    }
 
     void Start()
     {
         _seatsStatus = new Status[4];
+        //ModuleLocator.
     }
 
     public Transform GetFreeSeat()

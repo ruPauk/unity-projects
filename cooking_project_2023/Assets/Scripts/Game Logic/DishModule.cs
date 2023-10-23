@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DishModule : MonoBehaviour
+public class DishModule : MonoBehaviour, IModule
 {
     [SerializeField] private Color _greenDishColor;
     [SerializeField] private Color _redDishColor;
