@@ -1,13 +1,13 @@
 ﻿using System;
 using UnityEngine;
 
-public class VisitorR : IDisposable
+public class VisitorPresenter : IDisposable
 {
     private readonly VisitorView View;
     private readonly VisitorModel Model;
     private readonly IObjectPool<VisitorView> VisitorsPool;
 
-    public VisitorR(IObjectPool<VisitorView> visitorPool, VisitorModel model)
+    public VisitorPresenter(IObjectPool<VisitorView> visitorPool, VisitorModel model)
     {
         View = visitorPool.Spawn();
         VisitorsPool = visitorPool;
@@ -49,7 +49,7 @@ public class VisitorR : IDisposable
 
     public void CompleteHandler()
     {
-        
+        ModuleLocator.GetModule<VisitorsModuleR>().UtilizeVisitor(this, View.Seat);
     }
 }
 

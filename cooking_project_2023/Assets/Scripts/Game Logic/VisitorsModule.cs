@@ -9,7 +9,7 @@ using UnityEngine;
 public class VisitorsModuleR : IModule
 {
     private IObjectPool<VisitorView> _visitorsPool;
-    private List<VisitorR> _visitorsList;
+    private List<VisitorPresenter> _visitorsList;
     private TableSeats _tableSeats;
 
     public VisitorsModuleR(IObjectPool<VisitorView> visitorsPool)
@@ -29,7 +29,7 @@ public class VisitorsModuleR : IModule
         var place = _tableSeats.GetFreeSeat();
         if (place is not null)
         {
-            var visitor = new VisitorR(_visitorsPool, new VisitorModel());
+            var visitor = new VisitorPresenter(_visitorsPool, new VisitorModel());
             
             //newVisitor.Order = order;
             _visitorsList.Add(visitor);
@@ -40,15 +40,12 @@ public class VisitorsModuleR : IModule
     }
 
     
-    public void UtilizeVisitor(VisitorR visitor)
+    public void UtilizeVisitor(VisitorPresenter visitor, Transform seat)
     {
         //Поменял здесь входной параметр с VisitorView на VisitorR -> надо все менять теперь везде?
         //Мы же будем с Visitor общаться только через presenter вовне? Тогда надо дописывать еще управление в presenter?
-        _tableSeats.SetSeatFree(visitor.Seat);
-        visitor.HideOrder();
-        _visitorsList.Remove(visitor);
-        visitor.StartMovingByPath(_tableSeats.GetOutgoingPath, null,
-            () => _visitorsPool.Despawn(visitor));
+        _tableSeats.SetSeatFree(seat);
+        visitor.GoAwayFromScene(_tableSeats.GetOutgoingPath);
     }
     /*
     public void TakeAwayDishHandler(DishEnum dish)
