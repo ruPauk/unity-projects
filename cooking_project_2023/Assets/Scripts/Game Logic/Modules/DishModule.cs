@@ -9,12 +9,12 @@ public class DishModule : MonoBehaviour, IModule
     [SerializeField] private Color _blueDishColor;
     [SerializeField] private Color _yellowDishColor;
 
-    [SerializeField] private OrderDish _dishPrefab;
-    private ObjectPool<OrderDish> _dishPrefabPool;
+    [SerializeField] private OrderDishOld _dishPrefab;
+    private ObjectPool<OrderDishOld> _dishPrefabPool;
 
     private void Start()
     {
-        _dishPrefabPool = new ObjectPool<OrderDish>(_dishPrefab);
+        _dishPrefabPool = new ObjectPool<OrderDishOld>(_dishPrefab);
     }
 
     private Color ChooseColorByDish(DishEnum dish)
@@ -36,7 +36,7 @@ public class DishModule : MonoBehaviour, IModule
         }
     }
 
-    public OrderDish GetColoredDish(DishEnum dish)
+    public OrderDishOld GetColoredDish(DishEnum dish)
     {
         var color = ChooseColorByDish(dish);
         var result = _dishPrefabPool.Spawn();
@@ -47,7 +47,7 @@ public class DishModule : MonoBehaviour, IModule
         return result;
     }
 
-    public void RemoveFromPool(OrderDish orderDish)
+    public void RemoveFromPool(OrderDishOld orderDish)
     {
         _dishPrefabPool.Despawn(orderDish);
     }

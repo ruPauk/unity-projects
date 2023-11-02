@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class OrderDish : MonoBehaviour
+/*
+public class OrderDishOld : MonoBehaviour
 {
     private DishModule _dishModule;
 
@@ -29,3 +29,4 @@ public class OrderDish : MonoBehaviour
         _dishModule.RemoveFromPool(this);
     }
 }
+*/

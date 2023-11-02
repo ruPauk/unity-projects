@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _visitorPrefab: {fileID: -4338965951687503061, guid: 86041f4ecc5618a438832fd95d05487c, type: 3}
+  _orderPanelController: {fileID: 1881077940277027951, guid: 387e2e93e0f51494ab36235105112ddf, type: 3}
 --- !u!4 &858574982
 Transform:
   m_ObjectHideFlags: 0

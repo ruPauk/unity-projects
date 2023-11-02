@@ -6,21 +6,29 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class VisitorsModuleR : IModule
+public class VisitorsModule : IModule
 {
     private IObjectPool<VisitorView> _visitorsPool;
+    private OrderPanelObjectPool<OrderPanelController> _orderPanelPool;
     private List<VisitorPresenter> _visitorsList;
     private TableSeats _tableSeats;
+    
 
-    public VisitorsModuleR(IObjectPool<VisitorView> visitorsPool)
+    public VisitorsModule(
+        IObjectPool<VisitorView> visitorsPool,
+        OrderPanelObjectPool<OrderPanelController> orderPanelPool)
     {
         _visitorsPool = visitorsPool;
+        _orderPanelPool = orderPanelPool;
         _visitorsList = new ();
     }
 
-    public void SetUp(TableSeats tableSeats)
+    public Canvas Canvas { get; private set; }
+
+    public void SetUp(TableSeats tableSeats, Canvas canvas)
     {
         _tableSeats = tableSeats;
+        Canvas = canvas;
     }
 
     public void GetNewVisitor()
@@ -29,7 +37,7 @@ public class VisitorsModuleR : IModule
         var place = _tableSeats.GetFreeSeat();
         if (place is not null)
         {
-            var visitor = new VisitorPresenter(_visitorsPool, new VisitorModel());
+            var visitor = new VisitorPresenter(_visitorsPool, _orderPanelPool, new VisitorModel(), Canvas);
             
             //newVisitor.Order = order;
             _visitorsList.Add(visitor);
@@ -38,7 +46,6 @@ public class VisitorsModuleR : IModule
         }
         //return null;
     }
-
     
     public void UtilizeVisitor(VisitorPresenter visitor, Transform seat)
     {
@@ -47,31 +54,12 @@ public class VisitorsModuleR : IModule
         _tableSeats.SetSeatFree(seat);
         visitor.GoAwayFromScene(_tableSeats.GetOutgoingPath);
     }
-    /*
-    public void TakeAwayDishHandler(DishEnum dish)
-    {
-        if (_visitorsList.Count > 0)
-        {
-            VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(dish));
-            if (tmp != null)
-            {
-                Debug.Log($"Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
-                tmp.RemoveDish(dish);
-                if (tmp.Order.Dishes.Count <= 0)
-                {
-                    UtilizeVisitor(tmp);
-                }
-            }
-        }
-    }
-    */
-
 }
 
 
 
 
-
+/*
 // Модуль Visitors - Создает посетителей(pool) + создает pool + берет заказ + куда идет?
 public class VisitorsModule : MonoBehaviour
 {
@@ -109,7 +97,7 @@ public class VisitorsModule : MonoBehaviour
             var newVisitor = _visitorsPool.Spawn();
             newVisitor.Order = order;
             _visitorsList.Add(newVisitor);
-            SendVisitorToHisPlace(newVisitor, place);
+            //SendVisitorToHisPlace(newVisitor, place);
             return newVisitor;
         }
         return null;
@@ -128,7 +116,6 @@ public class VisitorsModule : MonoBehaviour
         StartCoroutine(sequence);
     }
 
-    /*
     private void SendVisitorToHisPlace(VisitorView visitor, Transform place)
     {
         visitor.transform.position = _incomingPath[0].position;
@@ -139,7 +126,6 @@ public class VisitorsModule : MonoBehaviour
         StartCoroutine(sequence);
         visitor.Seat = place;
     }
-    */
 
     private IEnumerator MoveVisitorAlongPath(VisitorView visitor, Transform[] path, Transform destination, Action action)
     {
@@ -178,7 +164,7 @@ public class VisitorsModule : MonoBehaviour
             VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(dish));
             if (tmp != null)
             {
-                Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
+                //Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
                 tmp.RemoveDish(dish);
                 if (tmp.Order.Dishes.Count <= 0)
                 {
@@ -208,8 +194,9 @@ public class VisitorsModule : MonoBehaviour
         VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(DishEnum.Yellow));
         if ( tmp != null )
         {
-            Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
+            //Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
             tmp.RemoveDish(DishEnum.Yellow);
         }
     }
 }
+*/

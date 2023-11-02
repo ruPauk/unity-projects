@@ -8,13 +8,17 @@ using UnityEngine.SceneManagement;
 public class Bootstrap : MonoBehaviour
 {
     [SerializeField] private VisitorView _visitorPrefab;
+    [SerializeField] private OrderPanelController _orderPanelController;
 
     void Start()
     {
         DOTween.Init();
         ModuleLocator.AddModule(new TableModule());
        // А как мне модуль создавать с TableSeats, если TableSeats еще отсутствует в момент Start Bootstrap?
-        ModuleLocator.AddModule(new VisitorsModuleR(new ObjectPool<VisitorView>(_visitorPrefab)));
+        ModuleLocator.AddModule(
+            new VisitorsModule(
+                new ObjectPool<VisitorView>(_visitorPrefab),
+                new OrderPanelObjectPool<OrderPanelController>(_orderPanelController)));
         SceneManager.LoadScene(1);
     }
 

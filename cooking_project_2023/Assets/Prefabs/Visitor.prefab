@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orderTable: {fileID: 488291767054246899}
-  Id: 0
+  _orderPanelCanvas: {fileID: 0}
   Order:
     Dishes: 
   Seat: {fileID: 0}

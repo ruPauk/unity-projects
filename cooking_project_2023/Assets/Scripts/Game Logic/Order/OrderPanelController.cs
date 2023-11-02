@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,12 +14,37 @@ public class OrderPanelController : MonoBehaviour
     //[SerializeField] private List<Color> _scrollbarColors;
     // ак тут лучше организовать соответствие между раскраской _dishes и заказом?
 
+    private Dictionary<DishEnum, Image> _dishDict = new();
     private float _orderTime = 0.1f;
     private float _currentTime;
 
-    public OrderPanelController(OrderDish orderDish)
+    public OrderPanelController(OrderDishOld orderDish)
     {
 
+    }
+
+    public void AddDishToPanel(OrderDish data)
+    {
+        var nextDish = _dishes.FirstOrDefault(x => x.gameObject.activeSelf == false);
+        if (nextDish != null)
+        {
+            (Color color, Sprite sprite) = data;
+            nextDish.color = color;
+            nextDish.sprite = sprite;
+            nextDish.gameObject.SetActive(true);
+            _dishDict.Add(data.DishEnum, nextDish);
+        }
+        else
+        {
+            Debug.Log("You are trying to add a dish to a panel even though all dishes are already set. Need a check on what's going on.");
+        }
+
+    }
+
+    public void ResetPanel()
+    {
+        _dishes.ForEach(x => x.gameObject.SetActive(false));
+        _dishDict.Clear();
     }
 
     private void Awake()

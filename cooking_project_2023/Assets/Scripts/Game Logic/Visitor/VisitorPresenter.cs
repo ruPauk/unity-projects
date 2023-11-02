@@ -6,13 +6,21 @@ public class VisitorPresenter : IDisposable
     private readonly VisitorView View;
     private readonly VisitorModel Model;
     private readonly IObjectPool<VisitorView> VisitorsPool;
+    private readonly OrderPanelObjectPool<OrderPanelController> OrderPanelPool;
+    private readonly Canvas PanelCanvas;
 
-    public VisitorPresenter(IObjectPool<VisitorView> visitorPool, VisitorModel model)
+    public VisitorPresenter(
+        IObjectPool<VisitorView> visitorPool,
+        OrderPanelObjectPool<OrderPanelController> orderPanelPool,
+        VisitorModel model,
+        Canvas canvas)
     {
         View = visitorPool.Spawn();
         VisitorsPool = visitorPool;
         Model = model;
         Model.OnComplete += CompleteHandler;
+        OrderPanelPool = orderPanelPool;
+        PanelCanvas = canvas;
     }
 
     public void Dispose()
@@ -26,12 +34,9 @@ public class VisitorPresenter : IDisposable
         View.transform.position = incPath[0].position;
         View.StartMovingByPath(incPath, place, () =>
         {
+            OrderPanelPool.Spawn(PanelCanvas);
             View.ShowOrder();
-            //Зачем это переносить в Model? Это же вроде работа View.
             View.ShowOrderContent(Model.DishList);
-            
-            //Старая версия
-            //View.ShowOrderContent(GetDishesArray(visitor));
         });
 
         View.Seat = place;
@@ -49,7 +54,7 @@ public class VisitorPresenter : IDisposable
 
     public void CompleteHandler()
     {
-        ModuleLocator.GetModule<VisitorsModuleR>().UtilizeVisitor(this, View.Seat);
+        ModuleLocator.GetModule<VisitorsModule>().UtilizeVisitor(this, View.Seat);
     }
 }
 

@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class VisitorView : MonoBehaviour
 {
     [SerializeField] private GameObject _orderTable;
+    [SerializeField] private Canvas _orderPanelCanvas { get; set; }
 
     public Order Order;
     public Transform Seat;
@@ -71,7 +72,7 @@ public class VisitorView : MonoBehaviour
         var padding = new Vector3(0, -0.8f, 0);
         foreach (var dish in dishes)
         {
-            Debug.Log($"Dish - {dish.DishType}");
+            Debug.Log($"Dish - {dish.DishEnum}");
             dish.transform.parent = _orderTable.transform;
             //dish.transform.localScale *= 0.6f;
             dish.transform.position = _orderTable.transform.position + padding;
@@ -81,7 +82,7 @@ public class VisitorView : MonoBehaviour
 
     public void RemoveDish(DishEnum dish)
     {
-        var removingObject = _dishList.Find((x) => x.DishType == dish);
+        var removingObject = _dishList?.Find((x) => x.DishEnum == dish);
         if (removingObject != null )
         {
             Debug.Log($"Found removing dish - {removingObject.DishType}");

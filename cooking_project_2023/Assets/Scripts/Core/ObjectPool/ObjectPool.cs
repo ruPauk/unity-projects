@@ -6,8 +6,8 @@ using UnityEngine;
 public class ObjectPool<T> : IObjectPool<T>
     where T : Component
 {
-    private Queue<T> _objectPool;
-    private T _prefab;
+    protected Queue<T> _objectPool;
+    protected T _prefab;
 
     public ObjectPool(T prefab)
     {

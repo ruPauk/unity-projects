@@ -13,10 +13,13 @@ public class Level : MonoBehaviour
 
     public TextAsset levelJson;
 
+    [SerializeField] private DishSetter _dishSetter;
+
     void Start()
     {
         _orders = FindObjectOfType<OrdersModule>();
-        _orders.SetUpLevel(JsonConvert.DeserializeObject<JsonObjectNewtonsoft>(levelJson.text));
+        _orders.SetUpLevel(JsonConvert.DeserializeObject<JsonObjectNewtonsoft>(levelJson.text),
+            _dishSetter);
     }
 
     void Update()

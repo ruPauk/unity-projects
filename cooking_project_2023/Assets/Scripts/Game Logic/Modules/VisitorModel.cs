@@ -3,15 +3,16 @@ using System.Collections.Generic;
 
 public class VisitorModel : IDisposable
 {
-    private List<OrderDish> _dishList;
+    private List<OrderDishOld> _dishList;
+    private List<OrderDish> _dishOrderList;
     private float _time;
-    //OnComplete дергать же надо, когда модель изменяется? А пока она никак не изменятется.
-    //Будто нужно переносить RemoveDish из View в Presenter и оттуда менять модель?
     public event Action OnComplete;
+    public event Action<DishEnum> OnTakeDish;
 
     public VisitorModel()
     {
         ModuleLocator.GetModule<TableModule>().OnDishTakeAwayR += TakeAwayDish;
+        _dishOrderList = ModuleLocator.GetModule<OrdersModule>().GetOrderList();
     }
 
     ~VisitorModel()
@@ -19,7 +20,7 @@ public class VisitorModel : IDisposable
         ModuleLocator.GetModule<TableModule>().OnDishTakeAwayR -= TakeAwayDish;
     }
 
-    public List<OrderDish> DishList
+    public List<OrderDishOld> DishList
     {
         get => _dishList;
     }
@@ -36,10 +37,10 @@ public class VisitorModel : IDisposable
     {
         if (!data.Flag)
         {
-            OrderDish temp = _dishList.Find((x) => x.DishType == data.Dish);
+            OrderDishOld temp = _dishList.Find((x) => x.DishType == data.Dish);
             if (temp != null)
             {
-                //Debug.Log($"Seat - {temp.Seat}, Order - {String.Join(", ", temp.Order.Dishes.ToArray())}");
+                OnTakeDish?.Invoke(data.Dish);
                 _dishList.Remove(temp);
                 if (_dishList.Count <= 0)
                 {
@@ -49,8 +50,7 @@ public class VisitorModel : IDisposable
         }
     }
 
-    //Зачем в модели Transform здесь? Нам же он во View нужен?
-    public void SetUpOrder(Order order)//, Transform place)
+    /*public void SetUpOrder(Order order)
     {
         var dishModule = ModuleLocator.GetModule<DishModule>();
 
@@ -63,7 +63,7 @@ public class VisitorModel : IDisposable
         {
             _dishList.Add(dishModule.GetColoredDish(dish));
         }
-    }
+    }*/
 
     public void Dispose()
     {
