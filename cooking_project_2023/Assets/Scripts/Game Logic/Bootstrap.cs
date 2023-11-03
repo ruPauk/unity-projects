@@ -19,6 +19,7 @@ public class Bootstrap : MonoBehaviour
             new VisitorsModule(
                 new ObjectPool<VisitorView>(_visitorPrefab),
                 new OrderPanelObjectPool<OrderPanelController>(_orderPanelController)));
+        ModuleLocator.AddModule(new OrdersModule());
         SceneManager.LoadScene(1);
     }
 

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 public class VisitorModel : IDisposable
 {
-    private List<OrderDishOld> _dishList;
+    //private List<OrderDish> _dishList;
     private List<OrderDish> _dishOrderList;
+
     private float _time;
+
     public event Action OnComplete;
     public event Action<DishEnum> OnTakeDish;
 
@@ -20,29 +22,30 @@ public class VisitorModel : IDisposable
         ModuleLocator.GetModule<TableModule>().OnDishTakeAwayR -= TakeAwayDish;
     }
 
-    public List<OrderDishOld> DishList
+    public IReadOnlyList<OrderDish> DishList
     {
-        get => _dishList;
+        get => _dishOrderList;
     }
 
+    /*
     private void ClearDishList()
     {
         foreach (var dish in _dishList)
         {
             dish.Remove();
         }
-    }
+    }*/
 
     private void TakeAwayDish(Data data)
     {
         if (!data.Flag)
         {
-            OrderDishOld temp = _dishList.Find((x) => x.DishType == data.Dish);
-            if (temp != null)
+            OrderDish temp = _dishOrderList.Find((x) => x.DishEnum == data.Dish);
+            if (!temp.IsEmpty)
             {
                 OnTakeDish?.Invoke(data.Dish);
-                _dishList.Remove(temp);
-                if (_dishList.Count <= 0)
+                _dishOrderList.Remove(temp);
+                if (_dishOrderList.Count <= 0)
                 {
                     OnComplete?.Invoke();
                 }
@@ -67,8 +70,9 @@ public class VisitorModel : IDisposable
 
     public void Dispose()
     {
-        ClearDishList();
+        //ClearDishList();
         OnComplete = null;
+        OnTakeDish = null;
     }
 }
 

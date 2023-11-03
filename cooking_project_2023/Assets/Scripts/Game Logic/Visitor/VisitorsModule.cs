@@ -12,7 +12,6 @@ public class VisitorsModule : IModule
     private OrderPanelObjectPool<OrderPanelController> _orderPanelPool;
     private List<VisitorPresenter> _visitorsList;
     private TableSeats _tableSeats;
-    
 
     public VisitorsModule(
         IObjectPool<VisitorView> visitorsPool,
@@ -34,6 +33,7 @@ public class VisitorsModule : IModule
     public void GetNewVisitor()
     {
         var order = ModuleLocator.GetModule<OrdersModule>().GetOrder();
+        Debug.Log($"Debugging order dishes - {order.Dishes}");
         var place = _tableSeats.GetFreeSeat();
         if (place is not null)
         {
@@ -53,6 +53,14 @@ public class VisitorsModule : IModule
         //ћы же будем с Visitor общатьс€ только через presenter вовне? “огда надо дописывать еще управление в presenter?
         _tableSeats.SetSeatFree(seat);
         visitor.GoAwayFromScene(_tableSeats.GetOutgoingPath);
+        //Test
+        _visitorsList.Remove(visitor);
+        //visitor.Dispose();
+    }
+
+    public void DeleteFirstVisitor()
+    {
+        _visitorsList[0].CompleteHandler();
     }
 }
 

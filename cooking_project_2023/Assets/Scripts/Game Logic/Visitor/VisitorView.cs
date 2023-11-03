@@ -9,39 +9,51 @@ using UnityEngine.UI;
 
 public class VisitorView : MonoBehaviour
 {
-    [SerializeField] private GameObject _orderTable;
-    [SerializeField] private Canvas _orderPanelCanvas { get; set; }
+    [SerializeField] private Transform _pivotPoint;
+   
 
-    public Order Order;
+    [SerializeField] private OrderPanelController _orderTable;
+    //private Canvas _orderPanelCanvas { get; set; }
+    public Transform PivotOrderTable => _pivotPoint;
+
+    //public Order Order;
     public Transform Seat;
 
     private List<OrderDish> _dishList;
 
+    public OrderPanelController OrderTable => _orderTable;
+
     private void Start()
     {
-        HideOrder();
+        //HideOrder();
+    }
+
+    public void SetOrderTable(OrderPanelController orderTable)
+    {
+        _orderTable = orderTable;
     }
 
     public void ResetVisitor()
     {
-        Order = null;
-        Seat = null;
-        _dishList = null;
+        //Order = null;
+        //Seat = null;
+        //_dishList = null;
     }
 
     public void ShowOrder()
     {
-        _orderTable.SetActive(true);
+        _orderTable.gameObject.SetActive(true);
     }
 
     public void HideOrder()
     {
-        _orderTable.SetActive(false);
+        _orderTable.gameObject.SetActive(false);
     }
 
     public void StartMovingByPath(Transform[] path, Transform destination, Action action)
     {
         StartCoroutine(MoveVisitorAlongPath(path, destination, action));
+        Seat = destination;
     }
 
     private IEnumerator MoveVisitorAlongPath(Transform[] path, Transform destination, Action action)
@@ -65,7 +77,8 @@ public class VisitorView : MonoBehaviour
         action.Invoke();
     }
 
-    //public void ShowOrderContent(OrderDish[] dishes)
+    //Reworking
+    /*
     public void ShowOrderContent(List<OrderDish> dishes)
     {
         //_dishList = dishes.ToList();
@@ -82,14 +95,14 @@ public class VisitorView : MonoBehaviour
 
     public void RemoveDish(DishEnum dish)
     {
-        var removingObject = _dishList?.Find((x) => x.DishEnum == dish);
-        if (removingObject != null )
+        var removingObject = _dishList.Find((x) => x.DishEnum == dish);
+        if (!removingObject.IsEmpty)
         {
-            Debug.Log($"Found removing dish - {removingObject.DishType}");
+            Debug.Log($"Found removing dish - {removingObject.DishEnum}");
             _dishList.Remove(removingObject);
-            removingObject.Remove();
+            //removingObject.Remove();
             Order.RemoveDish(dish);
         }
-    }
+    }*/
 }
 

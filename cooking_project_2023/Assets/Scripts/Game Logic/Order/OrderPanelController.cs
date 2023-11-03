@@ -11,39 +11,34 @@ public class OrderPanelController : MonoBehaviour
     [SerializeField] private Image _handleImageComponent;
 
     [SerializeField] private Gradient _gradient;
-    //[SerializeField] private List<Color> _scrollbarColors;
-    // ак тут лучше организовать соответствие между раскраской _dishes и заказом?
 
     private Dictionary<DishEnum, Image> _dishDict = new();
     private float _orderTime = 0.1f;
     private float _currentTime;
+    private int _currentDish;
 
-    public OrderPanelController(OrderDishOld orderDish)
+    //... ORDERDISH NEED
+    public void ShowAllDishesInPanel(IReadOnlyList<OrderDish> orderList)
     {
-
+        foreach(var dish in orderList)
+        {
+            AddDishToPanel(dish);
+        }
     }
 
     public void AddDishToPanel(OrderDish data)
     {
-        var nextDish = _dishes.FirstOrDefault(x => x.gameObject.activeSelf == false);
-        if (nextDish != null)
-        {
-            (Color color, Sprite sprite) = data;
-            nextDish.color = color;
-            nextDish.sprite = sprite;
-            nextDish.gameObject.SetActive(true);
-            _dishDict.Add(data.DishEnum, nextDish);
-        }
-        else
-        {
-            Debug.Log("You are trying to add a dish to a panel even though all dishes are already set. Need a check on what's going on.");
-        }
-
+        _dishes[_currentDish].gameObject.SetActive(true);
+        _dishes[_currentDish].sprite = data.Sprite;
+        _dishes[_currentDish].color = data.Color;
+        _dishDict.Add(data.DishEnum, _dishes[_currentDish]);
+        _currentDish++;
     }
 
     public void ResetPanel()
     {
         _dishes.ForEach(x => x.gameObject.SetActive(false));
+        _currentDish = 0;
         _dishDict.Clear();
     }
 
@@ -53,7 +48,6 @@ public class OrderPanelController : MonoBehaviour
         _currentTime = _orderTime;
         SetUpGradient();
         _orderTime = 0.1f;
-
     }
 
     private void LateUpdate()
@@ -62,7 +56,6 @@ public class OrderPanelController : MonoBehaviour
        // {
             ControlTimeScrollbar();
         //}
-        
     }
 
     private void ControlTimeScrollbar()
@@ -73,7 +66,6 @@ public class OrderPanelController : MonoBehaviour
         _timeScrollbar.size -= Time.deltaTime * _orderTime;
         //_timeScrollbar.size -= Time.deltaTime * 0.1f;
         _handleImageComponent.color = _gradient.Evaluate(_timeScrollbar.size);
-
     }
 
     private void SetUpGradient()

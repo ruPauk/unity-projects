@@ -11,10 +11,12 @@ public class OrderPanelObjectPool<T> : ObjectPool<T>
 
     }
 
-    public T Spawn(Canvas canvas)
+    public T Spawn(Canvas canvas, Transform pivotPoint)
     {
         var tmp = base.Spawn();
-        tmp.transform.SetParent(canvas.transform, false);
+        tmp.transform.SetParent(canvas.transform, true);
+        tmp.transform.position = Camera.main.WorldToScreenPoint(pivotPoint.position);
+        tmp.transform.localScale = new Vector3(1f, 1f, 1f);
         return tmp;
     }
 }

@@ -99,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4146276044769296304}
   m_Layer: 0
-  m_Name: PivotOrderTablePOint
+  m_Name: PivotOrderTablePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,8 +219,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a64f6aa0ec0f654f8a5cbcb483d66e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _orderTable: {fileID: 488291767054246899}
-  _orderPanelCanvas: {fileID: 0}
-  Order:
-    Dishes: 
+  _pivotPoint: {fileID: 4146276044769296304}
+  _orderTable: {fileID: 0}
   Seat: {fileID: 0}

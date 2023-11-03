@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Модуль Orders - Настройка уровня из JSON и отдача заказа + проверка на окончание уровня
-public class OrdersModule : MonoBehaviour, IModule
+public class OrdersModule : IModule
 {
     [SerializeField] private List<Order> _orders;
     private int _currentOrderNumber;
@@ -14,6 +14,7 @@ public class OrdersModule : MonoBehaviour, IModule
         _orders = gameData.Orders;
         Debug.Log($"Orders count = {_orders.Count}");
         _currentOrderNumber = 0;
+        _dishSetter = dishSetter;
     }
 
     public Order GetOrder()
@@ -31,8 +32,11 @@ public class OrdersModule : MonoBehaviour, IModule
     {
         var tmpOrder = GetOrder();
         var list = new List<OrderDish>();
+        Debug.Log($"Orders: {tmpOrder.Dishes.Count}, ");
+        //foreach (var item in tmpOrder.Dishes)
         foreach (var item in tmpOrder.Dishes)
         {
+            Debug.Log($"Testing dishSetter - {_dishSetter.GetOrderDish(item).DishEnum}, item - {item}");
             list.Add(_dishSetter.GetOrderDish(item));
         }
         return list;

@@ -11,4 +11,6 @@ public struct OrderDish
         color = Color;
         sprite = Sprite;
     }
+
+    public bool IsEmpty => DishEnum == DishEnum.None;
 }

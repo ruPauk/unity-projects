@@ -16,9 +16,9 @@ public class VisitorPresenter : IDisposable
         Canvas canvas)
     {
         View = visitorPool.Spawn();
-        VisitorsPool = visitorPool;
         Model = model;
         Model.OnComplete += CompleteHandler;
+        VisitorsPool = visitorPool;
         OrderPanelPool = orderPanelPool;
         PanelCanvas = canvas;
     }
@@ -26,6 +26,7 @@ public class VisitorPresenter : IDisposable
     public void Dispose()
     {
         VisitorsPool.Despawn(View);
+        // Здесь бы деспаунить еще и OrderPanel у этого посетителя, только как дотянуться до него?
         Model.Dispose();
     }
 
@@ -34,9 +35,14 @@ public class VisitorPresenter : IDisposable
         View.transform.position = incPath[0].position;
         View.StartMovingByPath(incPath, place, () =>
         {
-            OrderPanelPool.Spawn(PanelCanvas);
+            //var orderPanel = OrderPanelPool.Spawn(PanelCanvas, View.PivotOrderTable);
+            //orderPanel.transform.localScale = new Vector3 (0.1f, 0.1f, 1);
+            //View.SetOrderTable(orderPanel);
+
+            View.SetOrderTable(OrderPanelPool.Spawn(PanelCanvas, View.PivotOrderTable));
+            View.OrderTable.ShowAllDishesInPanel(Model.DishList);
             View.ShowOrder();
-            View.ShowOrderContent(Model.DishList);
+            //View.ShowOrderContent(Model.DishList);
         });
 
         View.Seat = place;
@@ -44,7 +50,7 @@ public class VisitorPresenter : IDisposable
 
     public void GoAwayFromScene(Transform[] outPath)
     {
-        View.transform.position = outPath[0].position;
+        //View.transform.position = outPath[0].position;
         View.HideOrder();
         View.StartMovingByPath(outPath, null, () =>
         {

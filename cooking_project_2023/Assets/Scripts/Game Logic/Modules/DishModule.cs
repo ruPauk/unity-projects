@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+//Reworking
 public class DishModule : MonoBehaviour, IModule
 {
     [SerializeField] private Color _greenDishColor;
@@ -9,12 +11,12 @@ public class DishModule : MonoBehaviour, IModule
     [SerializeField] private Color _blueDishColor;
     [SerializeField] private Color _yellowDishColor;
 
-    [SerializeField] private OrderDishOld _dishPrefab;
-    private ObjectPool<OrderDishOld> _dishPrefabPool;
+    [SerializeField] private OrderDish _dishPrefab;
+    private ObjectPool<OrderDish> _dishPrefabPool;
 
     private void Start()
     {
-        _dishPrefabPool = new ObjectPool<OrderDishOld>(_dishPrefab);
+        _dishPrefabPool = new ObjectPool<OrderDish>(_dishPrefab);
     }
 
     private Color ChooseColorByDish(DishEnum dish)
@@ -36,7 +38,7 @@ public class DishModule : MonoBehaviour, IModule
         }
     }
 
-    public OrderDishOld GetColoredDish(DishEnum dish)
+    public OrderDish GetColoredDish(DishEnum dish)
     {
         var color = ChooseColorByDish(dish);
         var result = _dishPrefabPool.Spawn();
@@ -47,7 +49,7 @@ public class DishModule : MonoBehaviour, IModule
         return result;
     }
 
-    public void RemoveFromPool(OrderDishOld orderDish)
+    public void RemoveFromPool(OrderDish orderDish)
     {
         _dishPrefabPool.Despawn(orderDish);
     }
@@ -57,3 +59,4 @@ public class DishModule : MonoBehaviour, IModule
 
 
 }
+*/
