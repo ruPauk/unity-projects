@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class VisitorModel : IDisposable
 {
@@ -11,10 +12,11 @@ public class VisitorModel : IDisposable
     public event Action OnComplete;
     public event Action<DishEnum> OnTakeDish;
 
-    public VisitorModel()
+    public VisitorModel(Order order)
     {
         ModuleLocator.GetModule<TableModule>().OnDishTakeAwayR += TakeAwayDish;
-        _dishOrderList = ModuleLocator.GetModule<OrdersModule>().GetOrderList();
+        _dishOrderList = ModuleLocator.GetModule<OrdersModule>().GetOrderDishesList(order);
+        Debug.Log($"Orders count = {_dishOrderList.Count}");
     }
 
     ~VisitorModel()
@@ -44,6 +46,7 @@ public class VisitorModel : IDisposable
             if (!temp.IsEmpty)
             {
                 OnTakeDish?.Invoke(data.Dish);
+                data.Flag = true;
                 _dishOrderList.Remove(temp);
                 if (_dishOrderList.Count <= 0)
                 {

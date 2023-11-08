@@ -50,6 +50,14 @@ public class OrderPanelController : MonoBehaviour
         _orderTime = 0.1f;
     }
 
+    public void SwitchOffDish(DishEnum dishEnum)
+    {
+        if (_dishDict.ContainsKey(dishEnum))
+        {
+            _dishDict[dishEnum].gameObject.SetActive(false);
+        }
+    }
+
     private void LateUpdate()
     {
        // if (_orderTime > 0)

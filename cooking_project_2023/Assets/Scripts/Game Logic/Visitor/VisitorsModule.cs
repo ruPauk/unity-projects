@@ -13,6 +13,8 @@ public class VisitorsModule : IModule
     private List<VisitorPresenter> _visitorsList;
     private TableSeats _tableSeats;
 
+    public event Action OnVisitorsRunOut;
+
     public VisitorsModule(
         IObjectPool<VisitorView> visitorsPool,
         OrderPanelObjectPool<OrderPanelController> orderPanelPool)
@@ -32,19 +34,21 @@ public class VisitorsModule : IModule
 
     public void GetNewVisitor()
     {
-        var order = ModuleLocator.GetModule<OrdersModule>().GetOrder();
-        Debug.Log($"Debugging order dishes - {order.Dishes}");
-        var place = _tableSeats.GetFreeSeat();
-        if (place is not null)
+        if (_visitorsList.Count < _tableSeats.SeatsCount)
         {
-            var visitor = new VisitorPresenter(_visitorsPool, _orderPanelPool, new VisitorModel(), Canvas);
-            
-            //newVisitor.Order = order;
-            _visitorsList.Add(visitor);
-            visitor.SendVisitorToHisPlace(place, _tableSeats.GetIncomingPath);
-            //return visitor;
+            var order = ModuleLocator.GetModule<OrdersModule>().GetNextOrder();
+            if (order != null)
+            {
+                //Debug.Log($"Debugging order dishes - {order.Dishes}");
+                var place = _tableSeats.GetFreeSeat();
+                if (place is not null)
+                {
+                    var visitor = new VisitorPresenter(_visitorsPool, _orderPanelPool, new VisitorModel(order), Canvas);
+                    _visitorsList.Add(visitor);
+                    visitor.SendVisitorToHisPlace(place, _tableSeats.GetIncomingPath);
+                }
+            }
         }
-        //return null;
     }
     
     public void UtilizeVisitor(VisitorPresenter visitor, Transform seat)
@@ -55,6 +59,11 @@ public class VisitorsModule : IModule
         visitor.GoAwayFromScene(_tableSeats.GetOutgoingPath);
         //Test
         _visitorsList.Remove(visitor);
+        if (_visitorsList.Count == 0 &&
+            ModuleLocator.GetModule<OrdersModule>().IsDone)
+        {
+            OnVisitorsRunOut?.Invoke();
+        }
         //visitor.Dispose();
     }
 

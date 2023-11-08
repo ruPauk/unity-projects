@@ -25,6 +25,7 @@ public class VisitorView : MonoBehaviour
 
     private void Start()
     {
+
         //HideOrder();
     }
 

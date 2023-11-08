@@ -18,6 +18,7 @@ public class VisitorPresenter : IDisposable
         View = visitorPool.Spawn();
         Model = model;
         Model.OnComplete += CompleteHandler;
+        Model.OnTakeDish += TakeAwayDish;
         VisitorsPool = visitorPool;
         OrderPanelPool = orderPanelPool;
         PanelCanvas = canvas;
@@ -26,7 +27,6 @@ public class VisitorPresenter : IDisposable
     public void Dispose()
     {
         VisitorsPool.Despawn(View);
-        // Здесь бы деспаунить еще и OrderPanel у этого посетителя, только как дотянуться до него?
         Model.Dispose();
     }
 
@@ -61,6 +61,11 @@ public class VisitorPresenter : IDisposable
     public void CompleteHandler()
     {
         ModuleLocator.GetModule<VisitorsModule>().UtilizeVisitor(this, View.Seat);
+    }
+
+    private void TakeAwayDish(DishEnum dishEnum)
+    {
+        View.OrderTable.SwitchOffDish(dishEnum);
     }
 }
 

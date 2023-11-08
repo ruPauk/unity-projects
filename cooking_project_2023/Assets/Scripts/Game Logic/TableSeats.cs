@@ -9,8 +9,11 @@ public class TableSeats : MonoBehaviour
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Transform[] _incomingPath;
     [SerializeField] private Transform[] _outgoingPath;
-
+    private int _seatsCount = 4;
     private Status[] _seatsStatus;
+
+    public int SeatsCount => _seatsCount;
+
     public Transform[] GetIncomingPath
     {
         get => _incomingPath;
@@ -23,7 +26,7 @@ public class TableSeats : MonoBehaviour
 
     void Start()
     {
-        _seatsStatus = new Status[4];
+        _seatsStatus = new Status[_seatsCount];
         ModuleLocator.GetModule<VisitorsModule>().SetUp(this, _canvas);
     }
 

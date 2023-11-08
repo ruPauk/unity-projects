@@ -20,7 +20,13 @@ public class Level : MonoBehaviour
         _orders = ModuleLocator.GetModule<OrdersModule>();
         _orders.SetUpLevel(JsonConvert.DeserializeObject<JsonObjectNewtonsoft>(levelJson.text),
             _dishSetter);
-        Debug.Log($"Making sure dishSetterr is in Level - {_dishSetter.GetOrderDish(DishEnum.Green).DishEnum}");
+        ModuleLocator.GetModule<VisitorsModule>().OnVisitorsRunOut += LevelReset;
+        //Debug.Log($"Making sure dishSetterr is in Level - {_dishSetter.GetOrderDish(DishEnum.Green).DishEnum}");
+    }
+
+    private void LevelReset()
+    {
+        Debug.Log("LEVEL IS FINISHED");
     }
 
     void Update()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,15 +10,17 @@ public class OrdersModule : IModule
     private int _currentOrderNumber;
     private DishSetter _dishSetter;
 
+    public bool IsDone => (_currentOrderNumber >= _orders.Count);
+
     public void SetUpLevel(JsonObjectNewtonsoft gameData, DishSetter dishSetter)
     {
         _orders = gameData.Orders;
-        Debug.Log($"Orders count = {_orders.Count}");
+        //Debug.Log($"Orders count = {_orders.Count}");
         _currentOrderNumber = 0;
         _dishSetter = dishSetter;
     }
 
-    public Order GetOrder()
+    public Order GetNextOrder()
     {
         Order result = null;
         if (_currentOrderNumber < _orders.Count)
@@ -28,15 +31,15 @@ public class OrdersModule : IModule
         return result;
     }
 
-    public List<OrderDish> GetOrderList()
+    public List<OrderDish> GetOrderDishesList(Order order)
     {
-        var tmpOrder = GetOrder();
+        //var tmpOrder = GetNextOrder();
         var list = new List<OrderDish>();
-        Debug.Log($"Orders: {tmpOrder.Dishes.Count}, ");
+        //Debug.Log($"Dishes count in order{_currentOrderNumber} = {order.Dishes.Count}");
         //foreach (var item in tmpOrder.Dishes)
-        foreach (var item in tmpOrder.Dishes)
+        foreach (var item in order.Dishes)
         {
-            Debug.Log($"Testing dishSetter - {_dishSetter.GetOrderDish(item).DishEnum}, item - {item}");
+            //Debug.Log($"Testing dishSetter - {_dishSetter.GetOrderDish(item).DishEnum}, item - {item}");
             list.Add(_dishSetter.GetOrderDish(item));
         }
         return list;

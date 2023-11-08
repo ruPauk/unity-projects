@@ -12,12 +12,12 @@ public class Data
 
 public class TableModule : IModule
 {
-    public event Action<DishEnum> OnDishTakeAway;
+    //public event Action<DishEnum> OnDishTakeAway;
     public event Action<Data> OnDishTakeAwayR;
 
     public void TakeAwayDish(DishEnum dish)
     {
-        OnDishTakeAway?.Invoke(dish);
+        //OnDishTakeAway?.Invoke(dish);
         OnDishTakeAwayR?.Invoke(new Data() { Flag = false, Dish = dish });
         Debug.Log($"Takeaway has been invoked with ({dish})");
     }

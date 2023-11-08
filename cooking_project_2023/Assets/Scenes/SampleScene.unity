@@ -633,7 +633,7 @@ MonoBehaviour:
   VisitorsCount: 0
   DishCount: 0
   Timer: 0
-  levelJson: {fileID: 4900000, guid: a84182f1ebf7577479728bad2a94d0a6, type: 3}
+  levelJson: {fileID: 4900000, guid: 82541b9fec0e4754782817e81db89a7f, type: 3}
   _dishSetter: {fileID: 11400000, guid: 46956fe24a4dbbd47934b37e13cff725, type: 2}
 --- !u!4 &338036395
 Transform:
