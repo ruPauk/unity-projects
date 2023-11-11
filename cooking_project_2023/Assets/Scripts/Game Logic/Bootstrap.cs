@@ -14,7 +14,6 @@ public class Bootstrap : MonoBehaviour
     {
         DOTween.Init();
         ModuleLocator.AddModule(new TableModule());
-       // А как мне модуль создавать с TableSeats, если TableSeats еще отсутствует в момент Start Bootstrap?
         ModuleLocator.AddModule(
             new VisitorsModule(
                 new ObjectPool<VisitorView>(_visitorPrefab),

@@ -13,7 +13,7 @@ public class Debugging : MonoBehaviour
 
     public void DeleteVisitor()
     {
-        ModuleLocator.GetModule<VisitorsModule>().DeleteFirstVisitor();
+       // ModuleLocator.GetModule<VisitorsModule>().DeleteFirstVisitor();
 
         /*if (_visitorsList.Count > 0)
         {

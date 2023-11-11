@@ -10,6 +10,7 @@ public class OrdersModule : IModule
     private int _currentOrderNumber;
     private DishSetter _dishSetter;
 
+    public int OverallVisitors => _orders.Count;
     public bool IsDone => (_currentOrderNumber >= _orders.Count);
 
     public void SetUpLevel(JsonObjectNewtonsoft gameData, DishSetter dishSetter)

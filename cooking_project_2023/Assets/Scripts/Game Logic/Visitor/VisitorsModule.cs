@@ -10,10 +10,11 @@ public class VisitorsModule : IModule
 {
     private IObjectPool<VisitorView> _visitorsPool;
     private OrderPanelObjectPool<OrderPanelController> _orderPanelPool;
-    private List<VisitorPresenter> _visitorsList;
-    private TableSeats _tableSeats;
 
-    public event Action OnVisitorsRunOut;
+    private TableSeats _tableSeats;
+    private int _visitorsCounter;
+    private int _satisfiedVisitorsCounter;
+    private int _sadVisitorsCounter;
 
     public VisitorsModule(
         IObjectPool<VisitorView> visitorsPool,
@@ -21,10 +22,12 @@ public class VisitorsModule : IModule
     {
         _visitorsPool = visitorsPool;
         _orderPanelPool = orderPanelPool;
-        _visitorsList = new ();
     }
 
     public Canvas Canvas { get; private set; }
+
+    public event Action OnVisitorsRunOut;
+    public event Action<int, int, int> OnVisitorCounterUpdate;
 
     public void SetUp(TableSeats tableSeats, Canvas canvas)
     {
@@ -34,7 +37,7 @@ public class VisitorsModule : IModule
 
     public void GetNewVisitor()
     {
-        if (_visitorsList.Count < _tableSeats.SeatsCount)
+        if (_tableSeats.hasFreeSeat)
         {
             var order = ModuleLocator.GetModule<OrdersModule>().GetNextOrder();
             if (order != null)
@@ -44,7 +47,6 @@ public class VisitorsModule : IModule
                 if (place is not null)
                 {
                     var visitor = new VisitorPresenter(_visitorsPool, _orderPanelPool, new VisitorModel(order), Canvas);
-                    _visitorsList.Add(visitor);
                     visitor.SendVisitorToHisPlace(place, _tableSeats.GetIncomingPath);
                 }
             }
@@ -57,163 +59,15 @@ public class VisitorsModule : IModule
         //Мы же будем с Visitor общаться только через presenter вовне? Тогда надо дописывать еще управление в presenter?
         _tableSeats.SetSeatFree(seat);
         visitor.GoAwayFromScene(_tableSeats.GetOutgoingPath);
+        OnVisitorCounterUpdate?.Invoke(
+            ModuleLocator.GetModule<OrdersModule>().OverallVisitors - ++_visitorsCounter,
+            _satisfiedVisitorsCounter,
+            _sadVisitorsCounter);
         //Test
-        _visitorsList.Remove(visitor);
-        if (_visitorsList.Count == 0 &&
+        if (_visitorsCounter >= ModuleLocator.GetModule<OrdersModule>().OverallVisitors &&
             ModuleLocator.GetModule<OrdersModule>().IsDone)
         {
             OnVisitorsRunOut?.Invoke();
         }
-        //visitor.Dispose();
-    }
-
-    public void DeleteFirstVisitor()
-    {
-        _visitorsList[0].CompleteHandler();
-    }
+    }    
 }
-
-
-
-
-/*
-// Модуль Visitors - Создает посетителей(pool) + создает pool + берет заказ + куда идет?
-public class VisitorsModule : MonoBehaviour
-{
-    [SerializeField] private VisitorView _visitorPrefab;
-    [SerializeField] private TableSeats _tableSeats;
-
-    [SerializeField] private Transform[] _incomingPath;
-    [SerializeField] private Transform[] _outgoingPath;
-
-    private ObjectPool<VisitorView> _visitorsPool;
-    private List<VisitorView> _visitorsList;
-    private OrdersModule _orders;
-    private DishModule _dishModule;
-
-    private void Start()
-    {
-        _visitorsPool = new ObjectPool<VisitorView>(_visitorPrefab);
-        _visitorsList = new List<VisitorView>();
-        _orders = FindObjectOfType<OrdersModule>();
-        _dishModule = FindObjectOfType<DishModule>();
-       // _tableModule = FindObjectOfType<TableModule>();
-        ModuleLocator.GetModule<TableModule>().OnDishTakeAway += TakeAwayDishHandler;
-        DOTween.Init(); 
-    }
-
-    //Вытаскиваем из пула посетителя, даем ему заказ и отправляем за стол
-    public VisitorView GetNewVisitor()
-    {
-        var order = _orders.GetOrder();
-        if (order == null)
-            return null;
-        var place = _tableSeats.GetFreeSeat();
-        if (place is not null)
-        {
-            var newVisitor = _visitorsPool.Spawn();
-            newVisitor.Order = order;
-            _visitorsList.Add(newVisitor);
-            //SendVisitorToHisPlace(newVisitor, place);
-            return newVisitor;
-        }
-        return null;
-    }
-
-    //Отправляем посетителя домой с выполненным заказом
-    public void UtilizeVisitor(VisitorView visitor)
-    {
-        _tableSeats.SetSeatFree(visitor.Seat);
-        visitor.HideOrder();
-        _visitorsList.Remove(visitor);
-        var sequence = MoveVisitorAlongPath(visitor, _outgoingPath, null, () => {
-            visitor.ResetVisitor();
-            _visitorsPool.Despawn(visitor);
-        });
-        StartCoroutine(sequence);
-    }
-
-    private void SendVisitorToHisPlace(VisitorView visitor, Transform place)
-    {
-        visitor.transform.position = _incomingPath[0].position;
-        var sequence = MoveVisitorAlongPath(visitor, _incomingPath, place, () => { 
-            visitor.ShowOrder();
-            visitor.ShowOrderContent(GetDishesArray(visitor));
-        });
-        StartCoroutine(sequence);
-        visitor.Seat = place;
-    }
-
-    private IEnumerator MoveVisitorAlongPath(VisitorView visitor, Transform[] path, Transform destination, Action action)
-    {
-        float speed = 2.5f;
-        var sequence = DOTween.Sequence();
-        sequence.SetEase(Ease.InOutSine);
-        Vector3[] fullPath = new Vector3[path.Length];
-
-        for (int i = 0; i< fullPath.Length; i++)
-        {
-            fullPath[i] = new Vector3(path[i].position.x, path[i].position.y, path[i].position.z);
-        }
-        sequence.Append(visitor.transform.DOPath(fullPath, speed, PathType.Linear));
-        if (destination != null)
-        {
-            sequence.Append(visitor.transform.DOMove(new Vector3(destination.position.x, destination.position.y, destination.position.z), speed));
-        }
-        yield return sequence.WaitForCompletion();
-        action.Invoke();
-    }
-
-    private OrderDish[] GetDishesArray(VisitorView visitor)
-    {
-        List<OrderDish> tmp = new List<OrderDish>();
-        foreach (var dish in visitor.Order.Dishes)
-        {
-            tmp.Add(_dishModule.GetColoredDish(dish));
-        }
-        return tmp.ToArray();
-    }
-
-    private void TakeAwayDishHandler(DishEnum dish)
-    {
-        if (_visitorsList.Count > 0)
-        {
-            VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(dish));
-            if (tmp != null)
-            {
-                //Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
-                tmp.RemoveDish(dish);
-                if (tmp.Order.Dishes.Count <= 0)
-                {
-                    UtilizeVisitor(tmp);
-                }
-            }
-        }  
-    }
-
-    // Methods for buttons
-    public void AddVisitor()
-    {
-        GetNewVisitor();
-    }
-
-    public void DeleteVisitor()
-    {
-        if ( _visitorsList.Count > 0 )
-        {
-            var lastVisitor = _visitorsList[0];
-            UtilizeVisitor(lastVisitor);
-        }        
-    }
-
-    public void FindDish()
-    {
-        VisitorView tmp = _visitorsList.Find((x) => x.Order.Dishes.Contains(DishEnum.Yellow));
-        if ( tmp != null )
-        {
-            //Debug.Log($"Found ID - {tmp.Id}, Seat - {tmp.Seat}, Order - {String.Join(", ", tmp.Order.Dishes.ToArray())}");
-            tmp.RemoveDish(DishEnum.Yellow);
-        }
-    }
-}
-*/

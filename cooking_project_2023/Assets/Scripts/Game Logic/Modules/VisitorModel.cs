@@ -6,7 +6,7 @@ public class VisitorModel : IDisposable
 {
     //private List<OrderDish> _dishList;
     private List<OrderDish> _dishOrderList;
-
+    //7F857D
     private float _time;
 
     public event Action OnComplete;

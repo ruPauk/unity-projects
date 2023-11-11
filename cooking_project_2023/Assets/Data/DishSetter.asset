@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _settings:
   - DishEnum: 1
-    Color: {r: 0.14509805, g: 0.6039216, b: 0.15686275, a: 1}
-    Sprite: {fileID: 21300000, guid: 0c6a2a64ca9f9c946a7dbbd1674cf5bd, type: 3}
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Sprite: {fileID: 21300000, guid: 6c967b3a0b3edfc42b7a568c3e9fffde, type: 3}
   - DishEnum: 2
-    Color: {r: 0.7058824, g: 0.13725491, b: 0.13725491, a: 1}
-    Sprite: {fileID: 21300000, guid: 0c6a2a64ca9f9c946a7dbbd1674cf5bd, type: 3}
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Sprite: {fileID: 21300000, guid: 1995230d6a6a4864680f1ad2b4695448, type: 3}
   - DishEnum: 3
-    Color: {r: 0.1882353, g: 0.09803922, b: 0.6313726, a: 1}
-    Sprite: {fileID: 21300000, guid: 0c6a2a64ca9f9c946a7dbbd1674cf5bd, type: 3}
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Sprite: {fileID: 21300000, guid: 76532a2b6a6350447a14008e5908ca8d, type: 3}
   - DishEnum: 4
-    Color: {r: 0.8784314, g: 0.8352941, b: 0.047058824, a: 1}
-    Sprite: {fileID: 21300000, guid: 0c6a2a64ca9f9c946a7dbbd1674cf5bd, type: 3}
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Sprite: {fileID: 21300000, guid: 6a0286d5b00045043948645e8e293284, type: 3}

@@ -4,10 +4,10 @@ using System.Drawing;
 public enum DishEnum
 {
     None = 0,
-    Green,
-    Red,
-    Blue,
-    Yellow
+    Burger,
+    Fries,
+    Pizza,
+    Cola
 }
 
 public struct DishElement

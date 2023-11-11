@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class OrderPanelController : MonoBehaviour
 {
-    [SerializeField] private Scrollbar _timeScrollbar;
+    [SerializeField] private Slider _timerSlider;
     [SerializeField] private List<Image> _dishes;
     [SerializeField] private Image _handleImageComponent;
 
@@ -17,7 +17,6 @@ public class OrderPanelController : MonoBehaviour
     private float _currentTime;
     private int _currentDish;
 
-    //... ORDERDISH NEED
     public void ShowAllDishesInPanel(IReadOnlyList<OrderDish> orderList)
     {
         foreach(var dish in orderList)
@@ -44,7 +43,7 @@ public class OrderPanelController : MonoBehaviour
 
     private void Awake()
     {
-        _timeScrollbar = GetComponentInChildren<Scrollbar>();
+        _timerSlider = GetComponentInChildren<Slider>();
         _currentTime = _orderTime;
         SetUpGradient();
         _orderTime = 0.1f;
@@ -60,10 +59,7 @@ public class OrderPanelController : MonoBehaviour
 
     private void LateUpdate()
     {
-       // if (_orderTime > 0)
-       // {
             ControlTimeScrollbar();
-        //}
     }
 
     private void ControlTimeScrollbar()
@@ -71,9 +67,9 @@ public class OrderPanelController : MonoBehaviour
         // С константой работает, а с переменной нет. И мб тут корутину использовать?
         //_currentTime -= Time.deltaTime / _orderTime;
         //_currentTime -= Time.deltaTime * 0.1f;
-        _timeScrollbar.size -= Time.deltaTime * _orderTime;
+        _timerSlider.value -= Time.deltaTime * _orderTime;
         //_timeScrollbar.size -= Time.deltaTime * 0.1f;
-        _handleImageComponent.color = _gradient.Evaluate(_timeScrollbar.size);
+        _handleImageComponent.color = _gradient.Evaluate(_timerSlider.value);
     }
 
     private void SetUpGradient()
@@ -90,7 +86,7 @@ public class OrderPanelController : MonoBehaviour
 
     private void ResetOrderPanelController()
     {
-        _timeScrollbar.size = 1f;
+        _timerSlider.value = 1f;
     }
 
 }

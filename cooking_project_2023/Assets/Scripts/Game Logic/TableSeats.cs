@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TableSeats : MonoBehaviour
@@ -13,6 +14,7 @@ public class TableSeats : MonoBehaviour
     private Status[] _seatsStatus;
 
     public int SeatsCount => _seatsCount;
+    public bool hasFreeSeat => _seatsStatus.Contains(Status.Free);
 
     public Transform[] GetIncomingPath
     {

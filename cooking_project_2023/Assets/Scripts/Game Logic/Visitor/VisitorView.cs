@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class VisitorView : MonoBehaviour
 {
     [SerializeField] private Transform _pivotPoint;
-   
+    [SerializeField] private List<Sprite> _sprites;
 
     [SerializeField] private OrderPanelController _orderTable;
     //private Canvas _orderPanelCanvas { get; set; }
@@ -25,8 +25,7 @@ public class VisitorView : MonoBehaviour
 
     private void Start()
     {
-
-        //HideOrder();
+        this.GetComponent<SpriteRenderer>().sprite = _sprites[UnityEngine.Random.Range(0, _sprites.Count)];
     }
 
     public void SetOrderTable(OrderPanelController orderTable)
