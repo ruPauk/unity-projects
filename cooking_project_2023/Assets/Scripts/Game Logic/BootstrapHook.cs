@@ -11,7 +11,7 @@ public class BootstrapHook
     {
         if(SceneManager.GetActiveScene().name != "Bootstrap")
         {
-            SceneManager.LoadScene("Bootstrap");
+            SceneManager.LoadScene(0);
         }
     }
 }

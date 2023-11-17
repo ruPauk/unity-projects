@@ -10,7 +10,7 @@ public class Bootstrap : MonoBehaviour
     [SerializeField] private VisitorView _visitorPrefab;
     [SerializeField] private OrderPanelController _orderPanelController;
 
-    void Start()
+    void Awake()
     {
         DOTween.Init();
         ModuleLocator.AddModule(new TableModule());
