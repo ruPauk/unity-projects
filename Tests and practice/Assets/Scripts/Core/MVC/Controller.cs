@@ -28,7 +28,8 @@ namespace Assets.Scripts.Core.MVC
             where T : class, IView
         {
             View = view as TView;
-            ShowView();
+            View.OnHide += HideView;
+            View.OnShow += ShowView;
         }
 
     }

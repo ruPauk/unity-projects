@@ -19,4 +19,10 @@ public class OrderPanelObjectPool<T> : ObjectPool<T>
         tmp.transform.localScale = new Vector3(1f, 1f, 1f);
         return tmp;
     }
+
+    public override void OnDespawn(T objectToDespawn)
+    {
+        (objectToDespawn as OrderPanelController).ResetOrderPanelController();
+        base.OnDespawn(objectToDespawn);
+    }
 }

@@ -14,6 +14,7 @@ public class Level : MonoBehaviour
     public TextAsset levelJson;
 
     [SerializeField] private DishSetter _dishSetter;
+    [SerializeField] private TableSeats _tableSeats;
 
     void Start()
     {
@@ -29,8 +30,14 @@ public class Level : MonoBehaviour
         Debug.Log("LEVEL IS FINISHED");
     }
 
+    private void GameLoop()
+    {
+        if (_tableSeats.hasFreeSeat && !_orders.IsDone)
+            ModuleLocator.GetModule<VisitorsModule>().GetNewVisitor();
+    }
+
     void Update()
     {
-        
+        GameLoop();
     }
 }

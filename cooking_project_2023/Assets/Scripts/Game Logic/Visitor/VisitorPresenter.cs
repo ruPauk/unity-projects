@@ -27,6 +27,7 @@ public class VisitorPresenter : IDisposable
     public void Dispose()
     {
         VisitorsPool.Despawn(View);
+        OrderPanelPool.Despawn(View.OrderTable);
         Model.Dispose();
     }
 
@@ -38,8 +39,9 @@ public class VisitorPresenter : IDisposable
             //var orderPanel = OrderPanelPool.Spawn(PanelCanvas, View.PivotOrderTable);
             //orderPanel.transform.localScale = new Vector3 (0.1f, 0.1f, 1);
             //View.SetOrderTable(orderPanel);
-
-            View.SetOrderTable(OrderPanelPool.Spawn(PanelCanvas, View.PivotOrderTable));
+            var orderPanel = OrderPanelPool.Spawn(PanelCanvas, View.PivotOrderTable);
+            orderPanel.OnTimerEnd += CompleteHandler;
+            View.SetOrderTable(orderPanel);
             View.OrderTable.ShowAllDishesInPanel(Model.DishList);
             View.ShowOrder();
             //View.ShowOrderContent(Model.DishList);
@@ -56,6 +58,12 @@ public class VisitorPresenter : IDisposable
         {
             this.Dispose();
         });
+    }
+
+    public void TimerOffHandler()
+    {
+        //View.
+        CompleteHandler();
     }
 
     public void CompleteHandler()

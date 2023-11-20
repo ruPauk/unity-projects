@@ -655,6 +655,7 @@ MonoBehaviour:
   Timer: 0
   levelJson: {fileID: 4900000, guid: 82541b9fec0e4754782817e81db89a7f, type: 3}
   _dishSetter: {fileID: 11400000, guid: 46956fe24a4dbbd47934b37e13cff725, type: 2}
+  _tableSeats: {fileID: 584247643}
 --- !u!4 &338036395
 Transform:
   m_ObjectHideFlags: 0

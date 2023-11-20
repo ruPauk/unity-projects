@@ -1,27 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public interface IState : IDisposable
-{
-    IStateMachine StateMachine { get; set; } 
-
-    void Enter();
-    void Update();
-    void Exit();
-}
-
-public interface IStateMachine
-{
-    IState CurrentState { get; }
-
-    void ChangeState<T>() 
-        where T : class, IState, new();
-    void Update();
-}
-
-public interface IStateMachineOwner { };
 
 public class StateMachine<T> : IStateMachine
     where T : class, IStateMachineOwner
@@ -50,32 +29,5 @@ public class StateMachine<T> : IStateMachine
     public void Update()
     {
         CurrentState?.Update();
-    }
-}
-
-public abstract class BaseState<T> : IState 
-    where T : class, IStateMachineOwner
-{
-    public T Owner { get; set; }
-    public IStateMachine StateMachine { get; set; }
-
-    public virtual void Dispose()
-    { 
-        GC.SuppressFinalize(this);
-    }
-
-    public virtual void Enter()
-    {
-
-    }
-
-    public virtual void Exit()
-    {
-
-    }
-
-    public virtual void Update()
-    {
-
     }
 }

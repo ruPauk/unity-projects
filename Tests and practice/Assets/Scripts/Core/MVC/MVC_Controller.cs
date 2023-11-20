@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 
 namespace Assets.Scripts.Core.MVC
 {
@@ -10,17 +12,33 @@ namespace Assets.Scripts.Core.MVC
     {
         public override void UpdateView()
         {
-            throw new NotImplementedException();
+            View.Tmpro.text = Model.Value.ToString();
         }
 
         protected override void HideView()
         {
-            throw new NotImplementedException();
+            View.Button.gameObject.SetActive(false);
+            View.Tmpro.gameObject.SetActive(false);
+            View.Button.onClick.RemoveListener(ButtonHandler);
         }
 
         protected override void ShowView()
         {
-            throw new NotImplementedException();
+            View.Button.gameObject.SetActive(true);
+            View.Tmpro.gameObject.SetActive(true);
+            View.ButtonTMP.text = "Initial button title";
+            View.Tmpro.text = "Initial text for text field";
+            View.Button.onClick.AddListener(ButtonHandler);
+        }
+
+        private void ButtonHandler()
+        {
+            Model.IncValue();
+            if (Model.Value > 3)
+            {
+                HideView();
+            }
+            UpdateView();
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Assets.Scripts.Core.MVC
 {
     public interface IView
     {
-
+        event Action OnHide;
+        event Action OnShow;
     }
 }

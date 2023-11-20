@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,9 @@ public class OrderPanelController : MonoBehaviour
 
     private Dictionary<DishEnum, Image> _dishDict = new();
     private float _orderTime = 0.1f;
-    private float _currentTime;
     private int _currentDish;
+
+    public event Action OnTimerEnd;
 
     public void ShowAllDishesInPanel(IReadOnlyList<OrderDish> orderList)
     {
@@ -44,7 +46,6 @@ public class OrderPanelController : MonoBehaviour
     private void Awake()
     {
         _timerSlider = GetComponentInChildren<Slider>();
-        _currentTime = _orderTime;
         SetUpGradient();
         _orderTime = 0.1f;
     }
@@ -64,12 +65,12 @@ public class OrderPanelController : MonoBehaviour
 
     private void ControlTimeScrollbar()
     {
-        // С константой работает, а с переменной нет. И мб тут корутину использовать?
-        //_currentTime -= Time.deltaTime / _orderTime;
-        //_currentTime -= Time.deltaTime * 0.1f;
         _timerSlider.value -= Time.deltaTime * _orderTime;
-        //_timeScrollbar.size -= Time.deltaTime * 0.1f;
         _handleImageComponent.color = _gradient.Evaluate(_timerSlider.value);
+        if (_timerSlider.value == 0)
+        {
+            OnTimerEnd?.Invoke();
+        }
     }
 
     private void SetUpGradient()
@@ -84,9 +85,9 @@ public class OrderPanelController : MonoBehaviour
         _gradient.SetKeys(colors, alphas);
     }
 
-    private void ResetOrderPanelController()
+    public void ResetOrderPanelController()
     {
         _timerSlider.value = 1f;
+        OnTimerEnd = null;
     }
-
 }
