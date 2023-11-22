@@ -38,6 +38,8 @@ public class OrderPanelController : MonoBehaviour
 
     public void ResetPanel()
     {
+        _timerSlider.value = 1f;
+        OnTimerEnd = null;
         _dishes.ForEach(x => x.gameObject.SetActive(false));
         _currentDish = 0;
         _dishDict.Clear();
@@ -83,11 +85,5 @@ public class OrderPanelController : MonoBehaviour
         alphas[0] = new GradientAlphaKey(1.0f, 1.0f);
         alphas[1] = new GradientAlphaKey(1.0f, 1.0f);
         _gradient.SetKeys(colors, alphas);
-    }
-
-    public void ResetOrderPanelController()
-    {
-        _timerSlider.value = 1f;
-        OnTimerEnd = null;
     }
 }

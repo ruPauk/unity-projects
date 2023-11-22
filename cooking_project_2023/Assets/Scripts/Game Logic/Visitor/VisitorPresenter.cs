@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class VisitorPresenter : IDisposable
@@ -8,6 +9,7 @@ public class VisitorPresenter : IDisposable
     private readonly IObjectPool<VisitorView> VisitorsPool;
     private readonly OrderPanelObjectPool<OrderPanelController> OrderPanelPool;
     private readonly Canvas PanelCanvas;
+
 
     public VisitorPresenter(
         IObjectPool<VisitorView> visitorPool,
@@ -36,15 +38,12 @@ public class VisitorPresenter : IDisposable
         View.transform.position = incPath[0].position;
         View.StartMovingByPath(incPath, place, () =>
         {
-            //var orderPanel = OrderPanelPool.Spawn(PanelCanvas, View.PivotOrderTable);
-            //orderPanel.transform.localScale = new Vector3 (0.1f, 0.1f, 1);
-            //View.SetOrderTable(orderPanel);
             var orderPanel = OrderPanelPool.Spawn(PanelCanvas, View.PivotOrderTable);
-            orderPanel.OnTimerEnd += CompleteHandler;
+            orderPanel.OnTimerEnd += TimerOffHandler;
             View.SetOrderTable(orderPanel);
             View.OrderTable.ShowAllDishesInPanel(Model.DishList);
             View.ShowOrder();
-            //View.ShowOrderContent(Model.DishList);
+            Model.IsVisitorReady = true;
         });
 
         View.Seat = place;
@@ -62,13 +61,12 @@ public class VisitorPresenter : IDisposable
 
     public void TimerOffHandler()
     {
-        //View.
-        CompleteHandler();
+        ModuleLocator.GetModule<VisitorsModule>().UtilizeVisitor(this, View.Seat, false);
     }
 
     public void CompleteHandler()
     {
-        ModuleLocator.GetModule<VisitorsModule>().UtilizeVisitor(this, View.Seat);
+        ModuleLocator.GetModule<VisitorsModule>().UtilizeVisitor(this, View.Seat, true);
     }
 
     private void TakeAwayDish(DishEnum dishEnum)

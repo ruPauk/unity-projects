@@ -22,7 +22,7 @@ public class OrderPanelObjectPool<T> : ObjectPool<T>
 
     public override void OnDespawn(T objectToDespawn)
     {
-        (objectToDespawn as OrderPanelController).ResetOrderPanelController();
+        (objectToDespawn as OrderPanelController).ResetPanel();
         base.OnDespawn(objectToDespawn);
     }
 }

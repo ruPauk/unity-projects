@@ -33,13 +33,6 @@ public class VisitorView : MonoBehaviour
         _orderTable = orderTable;
     }
 
-    public void ResetVisitor()
-    {
-        //Order = null;
-        //Seat = null;
-        //_dishList = null;
-    }
-
     public void ShowOrder()
     {
         _orderTable.gameObject.SetActive(true);
@@ -73,7 +66,7 @@ public class VisitorView : MonoBehaviour
             sequence.Append(this.transform.DOMove(new Vector3(destination.position.x, destination.position.y, destination.position.z), speed));
         }
         yield return sequence.WaitForCompletion();
-        this.ResetVisitor();
+        //this.ResetVisitor();
         action.Invoke();
     }
 

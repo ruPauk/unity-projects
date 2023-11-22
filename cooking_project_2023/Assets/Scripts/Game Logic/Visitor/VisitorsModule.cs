@@ -26,18 +26,24 @@ public class VisitorsModule : IModule
 
     public Canvas Canvas { get; private set; }
 
-    public event Action OnVisitorsRunOut;
+    public event Action<int, int> OnVisitorsRunOut;
     public event Action<int, int, int> OnVisitorCounterUpdate;
 
     public void SetUp(TableSeats tableSeats, Canvas canvas)
     {
         _tableSeats = tableSeats;
         Canvas = canvas;
+        _visitorsCounter = ModuleLocator.GetModule<OrdersModule>().OverallVisitors;
+        OnVisitorCounterUpdate?.Invoke(
+           _visitorsCounter,
+           _satisfiedVisitorsCounter,
+           _sadVisitorsCounter);
     }
 
     public void GetNewVisitor()
     {
-        if (_tableSeats.hasFreeSeat)
+        if (_tableSeats.hasFreeSeat &&
+            !ModuleLocator.GetModule<OrdersModule>().IsDone)
         {
             var order = ModuleLocator.GetModule<OrdersModule>().GetNextOrder();
             if (order != null)
@@ -53,21 +59,23 @@ public class VisitorsModule : IModule
         }
     }
     
-    public void UtilizeVisitor(VisitorPresenter visitor, Transform seat)
+    public void UtilizeVisitor(VisitorPresenter visitor, Transform seat, bool isVisitorSatisfied)
     {
-        //Поменял здесь входной параметр с VisitorView на VisitorR -> надо все менять теперь везде?
-        //Мы же будем с Visitor общаться только через presenter вовне? Тогда надо дописывать еще управление в presenter?
         _tableSeats.SetSeatFree(seat);
         visitor.GoAwayFromScene(_tableSeats.GetOutgoingPath);
+        if (isVisitorSatisfied) 
+            ++_satisfiedVisitorsCounter;
+        else 
+            ++_sadVisitorsCounter;
         OnVisitorCounterUpdate?.Invoke(
-            ModuleLocator.GetModule<OrdersModule>().OverallVisitors - ++_visitorsCounter,
+            --_visitorsCounter,
             _satisfiedVisitorsCounter,
             _sadVisitorsCounter);
         //Test
-        if (_visitorsCounter >= ModuleLocator.GetModule<OrdersModule>().OverallVisitors &&
+        if (_visitorsCounter <= 0 &&
             ModuleLocator.GetModule<OrdersModule>().IsDone)
         {
-            OnVisitorsRunOut?.Invoke();
+            OnVisitorsRunOut?.Invoke(_satisfiedVisitorsCounter, ModuleLocator.GetModule<OrdersModule>().OverallVisitors);
         }
     }    
 }

@@ -1,7 +1,9 @@
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Level : MonoBehaviour
 {
@@ -15,19 +17,20 @@ public class Level : MonoBehaviour
 
     [SerializeField] private DishSetter _dishSetter;
     [SerializeField] private TableSeats _tableSeats;
+    [SerializeField] private UIModule _uiModule;
 
     void Start()
     {
         _orders = ModuleLocator.GetModule<OrdersModule>();
         _orders.SetUpLevel(JsonConvert.DeserializeObject<JsonObjectNewtonsoft>(levelJson.text),
             _dishSetter);
-        ModuleLocator.GetModule<VisitorsModule>().OnVisitorsRunOut += LevelReset;
+        _uiModule.OnResetButtonClick.AddListener(LevelReset);
         //Debug.Log($"Making sure dishSetterr is in Level - {_dishSetter.GetOrderDish(DishEnum.Green).DishEnum}");
     }
 
     private void LevelReset()
     {
-        Debug.Log("LEVEL IS FINISHED");
+        SceneManager.LoadScene(0);
     }
 
     private void GameLoop()

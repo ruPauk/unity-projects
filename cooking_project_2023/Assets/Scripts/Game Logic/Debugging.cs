@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class Debugging : MonoBehaviour
 {
+    private bool isPaused = false;
     // Methods for buttons
     public void AddVisitor()
     {
-        Debug.Log("Adding Visitor through the button");
-        ModuleLocator.GetModule<VisitorsModule>().GetNewVisitor();
+        //Debug.Log("Adding Visitor through the button");
+        //ModuleLocator.GetModule<VisitorsModule>().GetNewVisitor();
+       
+        
+        /*if (isPaused)
+        {
+            Time.timeScale = 1;
+            isPaused = false;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            isPaused = true;
+        }     */ 
     }
 
     public void DeleteVisitor()

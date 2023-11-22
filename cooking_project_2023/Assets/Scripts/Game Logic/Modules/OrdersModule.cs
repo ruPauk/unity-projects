@@ -23,8 +23,9 @@ public class OrdersModule : IModule
 
     public Order GetNextOrder()
     {
+        Debug.Log($"CurrentOrderNumber = {_currentOrderNumber}, IsDone = {IsDone}");
         Order result = null;
-        if (_currentOrderNumber < _orders.Count)
+        if (!IsDone)
         {
             result = _orders[_currentOrderNumber];
             _currentOrderNumber++;
