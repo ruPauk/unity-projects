@@ -7,7 +7,6 @@ public class VisitorModel : IDisposable
     public bool IsVisitorReady;
 
     private List<OrderDish> _dishOrderList;
-    //7F857D
     private float _time;
 
     public event Action OnComplete;
@@ -51,7 +50,6 @@ public class VisitorModel : IDisposable
 
     public void Dispose()
     {
-        //ClearDishList();
         OnComplete = null;
         OnTakeDish = null;
     }

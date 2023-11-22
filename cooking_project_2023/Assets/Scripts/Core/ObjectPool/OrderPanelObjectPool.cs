@@ -6,10 +6,7 @@ using UnityEngine;
 public class OrderPanelObjectPool<T> : ObjectPool<T>
     where T : Component
 {
-    public OrderPanelObjectPool(T prefab) : base(prefab)
-    {
-
-    }
+    public OrderPanelObjectPool(T prefab) : base(prefab) { }
 
     public T Spawn(Canvas canvas, Transform pivotPoint)
     {

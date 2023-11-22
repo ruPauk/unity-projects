@@ -6,10 +6,10 @@ using UnityEngine;
 public class TableSeats : MonoBehaviour
 {
     [SerializeField] private List<Transform> _seats;
-
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Transform[] _incomingPath;
     [SerializeField] private Transform[] _outgoingPath;
+
     private int _seatsCount = 4;
     private Status[] _seatsStatus;
 
@@ -47,13 +47,8 @@ public class TableSeats : MonoBehaviour
 
     public void SetSeatFree(Transform seat)
     {
-        // Как тут лучше проверять место?
         var tmp = _seats.IndexOf(seat);
-        //Debug.Log($"Index = {tmp}");
-       // if (tmp >= 0 && tmp < _seats.Count)
-        //{
-            _seatsStatus[tmp] = Status.Free;
-        //}
+        _seatsStatus[tmp] = Status.Free;
     }
 }
 

@@ -21,6 +21,7 @@ public class UIModule : MonoBehaviour, IModule
     [SerializeField] private TextMeshProUGUI _titleText;
     [SerializeField] private List<Image> _stars;
     [SerializeField] private Button _resetButton;
+    [SerializeField] private Button _exitButton;
 
     public Button.ButtonClickedEvent OnResetButtonClick => _resetButton.onClick;
 
@@ -33,7 +34,8 @@ public class UIModule : MonoBehaviour, IModule
         _pauseButton.onClick.AddListener(PauseGame);
         _resultsCanvas.gameObject.SetActive(false);
         ModuleLocator.GetModule<VisitorsModule>().OnVisitorsRunOut += OpenResultsScreen;
-        _resetButton.onClick.AddListener(() => Debug.Log("RESTARTING")); ;
+        _exitButton.onClick.AddListener(ExitGame);
+
     }
 
     private void OpenResultsScreen(int satisfied, int visitorsCount)
@@ -91,6 +93,11 @@ public class UIModule : MonoBehaviour, IModule
         _visitorsCounter.text = left.ToString();
         _satisfiedVisitorsCounter.text = satisfied.ToString();
         _sadVisitorsCounter.text = sad.ToString();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
     private void OnDestroy()

@@ -11,12 +11,8 @@ public class VisitorView : MonoBehaviour
 {
     [SerializeField] private Transform _pivotPoint;
     [SerializeField] private List<Sprite> _sprites;
-
     [SerializeField] private OrderPanelController _orderTable;
-    //private Canvas _orderPanelCanvas { get; set; }
     public Transform PivotOrderTable => _pivotPoint;
-
-    //public Order Order;
     public Transform Seat;
 
     private List<OrderDish> _dishList;
@@ -66,36 +62,7 @@ public class VisitorView : MonoBehaviour
             sequence.Append(this.transform.DOMove(new Vector3(destination.position.x, destination.position.y, destination.position.z), speed));
         }
         yield return sequence.WaitForCompletion();
-        //this.ResetVisitor();
         action.Invoke();
     }
-
-    //Reworking
-    /*
-    public void ShowOrderContent(List<OrderDish> dishes)
-    {
-        //_dishList = dishes.ToList();
-        var padding = new Vector3(0, -0.8f, 0);
-        foreach (var dish in dishes)
-        {
-            Debug.Log($"Dish - {dish.DishEnum}");
-            dish.transform.parent = _orderTable.transform;
-            //dish.transform.localScale *= 0.6f;
-            dish.transform.position = _orderTable.transform.position + padding;
-            padding.y += 0.8f;
-        }
-    }
-
-    public void RemoveDish(DishEnum dish)
-    {
-        var removingObject = _dishList.Find((x) => x.DishEnum == dish);
-        if (!removingObject.IsEmpty)
-        {
-            Debug.Log($"Found removing dish - {removingObject.DishEnum}");
-            _dishList.Remove(removingObject);
-            //removingObject.Remove();
-            Order.RemoveDish(dish);
-        }
-    }*/
 }
 

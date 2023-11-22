@@ -1,7 +1,4 @@
 using Newtonsoft.Json;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,7 +22,6 @@ public class Level : MonoBehaviour
         _orders.SetUpLevel(JsonConvert.DeserializeObject<JsonObjectNewtonsoft>(levelJson.text),
             _dishSetter);
         _uiModule.OnResetButtonClick.AddListener(LevelReset);
-        //Debug.Log($"Making sure dishSetterr is in Level - {_dishSetter.GetOrderDish(DishEnum.Green).DishEnum}");
     }
 
     private void LevelReset()

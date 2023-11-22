@@ -10,7 +10,6 @@ public class VisitorPresenter : IDisposable
     private readonly OrderPanelObjectPool<OrderPanelController> OrderPanelPool;
     private readonly Canvas PanelCanvas;
 
-
     public VisitorPresenter(
         IObjectPool<VisitorView> visitorPool,
         OrderPanelObjectPool<OrderPanelController> orderPanelPool,
@@ -45,13 +44,11 @@ public class VisitorPresenter : IDisposable
             View.ShowOrder();
             Model.IsVisitorReady = true;
         });
-
         View.Seat = place;
     }
 
     public void GoAwayFromScene(Transform[] outPath)
     {
-        //View.transform.position = outPath[0].position;
         View.HideOrder();
         View.StartMovingByPath(outPath, null, () =>
         {

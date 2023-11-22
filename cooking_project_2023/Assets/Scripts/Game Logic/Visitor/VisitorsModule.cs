@@ -10,8 +10,8 @@ public class VisitorsModule : IModule
 {
     private IObjectPool<VisitorView> _visitorsPool;
     private OrderPanelObjectPool<OrderPanelController> _orderPanelPool;
-
     private TableSeats _tableSeats;
+
     private int _visitorsCounter;
     private int _satisfiedVisitorsCounter;
     private int _sadVisitorsCounter;
@@ -71,7 +71,6 @@ public class VisitorsModule : IModule
             --_visitorsCounter,
             _satisfiedVisitorsCounter,
             _sadVisitorsCounter);
-        //Test
         if (_visitorsCounter <= 0 &&
             ModuleLocator.GetModule<OrdersModule>().IsDone)
         {

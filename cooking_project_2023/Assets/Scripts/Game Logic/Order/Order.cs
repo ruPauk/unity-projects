@@ -7,9 +7,6 @@ using UnityEngine;
 public class Order
 {
     public List<DishEnum> Dishes;
-    /* Будто бы хотелось сюда добавить список OrderDish,
-     * но это же Serializable
-     */
 
     public void RemoveDish(DishEnum dish)
     {
