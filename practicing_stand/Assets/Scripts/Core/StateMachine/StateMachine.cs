@@ -10,8 +10,13 @@ public class StateMachine<T> : IStateMachine
         Owner = owner;
     }
 
-    public T Owner { get; }
+    //public T Owner { get; }
     public IState CurrentState { get; private set; }
+
+    //Тут чет не понял, почему я не могу просто Owner оставить, а надо реализовывать IStateMachine.Owner 
+    //IStateMachineOwner IStateMachine.Owner => Owner;
+
+    public IStateMachineOwner Owner { get; }
 
     public void ChangeState<T>() 
         where T : class, IState, new()
